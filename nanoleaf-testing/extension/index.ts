@@ -2,9 +2,11 @@ import { NodeCG } from "nodecg/types/server";
 import { PubSubServiceClient } from "nodecg-io-twitch-pubsub/extension";
 import { requireService } from "nodecg-io-core/extension/serviceClientWrapper";
 import fetch from 'node-fetch';
+import { NanoleafClient } from "./nanoleafClient";
 
 module.exports = function (nodecg: NodeCG) {
     nodecg.log.info("Nanoleaf testing bundle started!");
+    const nanoleaf = new NanoleafClient("192.168.178.105", "vT7KxVZhRHAwCzONzugdU8E7MNA6C9XO", nodecg);
 
     const pubsub = requireService<PubSubServiceClient>(nodecg, "twitch-pubsub");
 
@@ -13,15 +15,9 @@ module.exports = function (nodecg: NodeCG) {
         client.onSubscription((message) => {
             console.log(`${message.userDisplayName} just subscribed (${message.cumulativeMonths} months)`);
         });
-        client.onBits((message) => {
-            console.log(`${message.userName} cheered ${message.bits} Bits`);
-        });
-        client.onBitsBadgeUnlock((message) => {
-            console.log(`${message.userName} just unlocked the ${message.badgeTier} Badge`);
-        });
         client.onRedemption((message) => {
-            console.log(`${message.userDisplayName} redeemed ${message.rewardName} (${message.message})`);
-            if(message.rewardName === "Eine Kachel einfärben") {
+            console.log(`${message.userDisplayName} redeemed ${message.rewardName}`);
+            if (message.rewardName === "Eine Kachel einfärben") {
                 if (!isNaN(parseInt(message.message))) {
                     const number = parseInt(message.message);
                     if (number >= 0 && number < 360) {
@@ -29,6 +25,8 @@ module.exports = function (nodecg: NodeCG) {
                         sendColor(number);
                     }
                 }
+            } else if (message.rewardName === "Alle Kacheln zufällig färben") {
+                glitter();
             }
         });
     });
