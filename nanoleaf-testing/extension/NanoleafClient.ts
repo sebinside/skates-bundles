@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { response } from "express";
 
 export interface Color { red: number, green: number, blue: number }
+export interface ColoredPanel { panelId: number, color: Color }
 
 export class NanoleafClient {
 
@@ -63,6 +64,9 @@ export class NanoleafClient {
         };
     }
 
+    // Important: Does only remember colors which were directly set through setPanelColor(s)
+    private colors: Map<number, Color> = new Map<number, Color>();
+
     constructor(private ipAddress: string, private authToken: string, nodecg: NodeCG) {
         NanoleafClient.verifyConnection(ipAddress, authToken).then(response => {
             if (response) {
@@ -93,7 +97,7 @@ export class NanoleafClient {
         return this.callGET("")
     }
 
-    async getAllPanelIDs() {
+    async getAllPanelIDs(): Promise<Array<number>> {
         const response = await this.getAllPanelInfo()
 
         if (response.status !== 200) {
@@ -112,7 +116,9 @@ export class NanoleafClient {
         this.setPanelColors([{ panelId: panelId, color: color }]);
     }
 
-    async setPanelColors(data: { panelId: number, color: Color }[]) {
+    async setPanelColors(data: ColoredPanel[]) {
+        data.forEach(panel => this.colors.set(panel.panelId, panel.color));
+
         if (data.length >= 1) {
             const animData = `${data.length}` +
                 data
@@ -134,12 +140,39 @@ export class NanoleafClient {
         }
     }
 
-    async setBrightness(level: number) {
-        const data = { brightness: { value: level } };
-        this.callPUT("/state/brightness", data);
+    getPanelColor(panelId: number) {
+        return this.colors.get(panelId);
     }
 
-    // TODO: State, Hue, Saturation, Color Temperature
-    // TODO: getAllPanelColors, getPanelColor
+    getAllPanelColors() {
+        return this.colors;
+    }
+
+    async setBrightness(level: number) {
+        const data = { brightness: { value: level } };
+        this.callPUT("/state", data);
+    }
+
+    async setState(on: boolean) {
+        const data = { on: { value: on } }
+        this.callPUT("/state", data);
+    }
+
+    async setHue(hue: number) {
+        const data = { hue: { value: hue } }
+        this.callPUT("/state", data);
+    }
+
+    async setSaturation(sat: number) {
+        const data = { sat: { value: sat } }
+        this.callPUT("/state", data);
+    }
+
+    async setColorTemperature(temperature: number) {
+        const data = { ct: { value: temperature } }
+        this.callPUT("/state", data);
+    }
+
     // TODO: animatePanelColors(values, type: RANDOM, BOTTOMUP)
+    // TODO: Puffer all other channel point actions while sub action!
 }

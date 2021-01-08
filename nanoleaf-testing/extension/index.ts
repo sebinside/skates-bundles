@@ -11,6 +11,7 @@ module.exports = function (nodecg: NodeCG) {
     nodecg.log.info("Nanoleaf testing bundle started!");
     nanoleaf = new NanoleafClient("192.168.178.105", "vT7KxVZhRHAwCzONzugdU8E7MNA6C9XO", nodecg);
     nanoleaf.getAllPanelIDs().then(iDs => panels = iDs);
+    nanoleaf.setState(true);
     nanoleaf.setBrightness(25);
 
     const pubsub = requireService<PubSubServiceClient>(nodecg, "twitch-pubsub");
