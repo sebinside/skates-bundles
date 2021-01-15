@@ -4,6 +4,7 @@ import { response } from "express";
 
 export interface Color { red: number, green: number, blue: number }
 export interface ColoredPanel { panelId: number, color: Color }
+export enum CustomEffects { RANDOM, BOTTOM_UP }
 
 export class NanoleafClient {
 
@@ -140,6 +141,34 @@ export class NanoleafClient {
         }
     }
 
+    async writeRawEffect(
+        command: "add" | "display" | "displayTemp", animType: "static" | "custom", loop: boolean,
+        panelData: { panelId: number, frames: { color: Color, transitionTime: number }[] }[],
+        duration = 0) {
+        if (panelData.every(panel => panel.frames.length >= 1)) {
+            const animData = `${panelData.length}` +
+                panelData.map(entry =>
+                    ` ${entry.panelId} ${entry.frames.length}${entry.frames
+                        .map(frame => ` ${frame.color.red} ${frame.color.green} ${frame.color.blue} 0 ${frame.transitionTime}`)
+                        .join("")}`
+                ).join("");
+
+            const json = {
+                "write":
+                {
+                    "command": command,
+                    "duration": duration,
+                    "animType": animType,
+                    "animData": animData,
+                    "loop": loop,
+                    "palette": []
+                }
+            }
+
+            this.callPUT("/effects", json)
+        }
+    }
+
     getPanelColor(panelId: number) {
         return this.colors.get(panelId);
     }
@@ -173,6 +202,11 @@ export class NanoleafClient {
         this.callPUT("/state", data);
     }
 
-    // TODO: animatePanelColors(values, type: RANDOM, BOTTOMUP)
+    // TODO: setpanelcolros shall call writeraweffect
     // TODO: Puffer all other channel point actions while sub action!
+    // TODO: sub-upgrade effect
+    // TODO: Hype-Train-Effect (non-temporary)
+    // TODO: Commit nanoleaf client to nodecg-io
+
+
 }
