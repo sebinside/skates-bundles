@@ -4,7 +4,7 @@ import { response } from "express";
 
 export interface Color { red: number, green: number, blue: number }
 export interface ColoredPanel { panelId: number, color: Color }
-export enum CustomEffects { RANDOM, BOTTOM_UP }
+export interface PanelEffect { panelId: number, frames: { color: Color, transitionTime: number }[] }
 
 export class NanoleafClient {
 
@@ -98,7 +98,7 @@ export class NanoleafClient {
         return this.callGET("")
     }
 
-    async getAllPanelIDs(): Promise<Array<number>> {
+    async getAllPanelIDs(sorted: boolean): Promise<Array<number>> {
         const response = await this.getAllPanelInfo()
 
         if (response.status !== 200) {
@@ -106,7 +106,9 @@ export class NanoleafClient {
         }
 
         const json = await response.json();
-        const panelIDs = json.panelLayout?.layout?.positionData
+        const positionData: Array<any> = json.panelLayout?.layout?.positionData;
+        const panels = sorted ? positionData.sort((a, b) => a.y - b.y) : positionData;
+        const panelIDs = panels
             ?.map((entry: any) => entry.panelId)
             .filter((entry: number) => entry !== 0);
 
@@ -121,29 +123,17 @@ export class NanoleafClient {
         data.forEach(panel => this.colors.set(panel.panelId, panel.color));
 
         if (data.length >= 1) {
-            const animData = `${data.length}` +
-                data
-                    .map((entry) => ` ${entry.panelId} 1 ${entry.color.red} ${entry.color.green} ${entry.color.blue} 0 1`)
-                    .join("")
 
-            const json = {
-                "write":
-                {
-                    "command": "display",
-                    "animType": "static",
-                    "animData": animData,
-                    "loop": false,
-                    "palette": []
-                }
-            }
+            const panelData: PanelEffect[] = data.map((entry) =>
+                ({ panelId: entry.panelId, frames: [{ color: entry.color, transitionTime: 1 }] }))
 
-            this.callPUT("/effects", json)
+            this.writeRawEffect("display", "static", false, panelData);
         }
     }
 
     async writeRawEffect(
         command: "add" | "display" | "displayTemp", animType: "static" | "custom", loop: boolean,
-        panelData: { panelId: number, frames: { color: Color, transitionTime: number }[] }[],
+        panelData: PanelEffect[],
         duration = 0) {
         if (panelData.every(panel => panel.frames.length >= 1)) {
             const animData = `${panelData.length}` +
@@ -170,7 +160,7 @@ export class NanoleafClient {
     }
 
     getPanelColor(panelId: number) {
-        return this.colors.get(panelId);
+        return this.colors.get(panelId) || {red: 0, blue: 0, green: 0};
     }
 
     getAllPanelColors() {
@@ -202,9 +192,31 @@ export class NanoleafClient {
         this.callPUT("/state", data);
     }
 
-    // TODO: setpanelcolros shall call writeraweffect
-    // TODO: Puffer all other channel point actions while sub action!
-    // TODO: sub-upgrade effect
+    private eventQueue: { functionCall: () => any, durationInSeconds: number }[] = [];
+    private isQueueWorkerRunning = false;
+
+    async queueEvent(functionCall: () => any, durationInSeconds: number) {
+        this.eventQueue.push({ functionCall, durationInSeconds });
+        if (!this.isQueueWorkerRunning) {
+            this.isQueueWorkerRunning = true;
+            this.showNextQueueEffect();
+        }
+    }
+
+    private async showNextQueueEffect() {
+        if (this.eventQueue.length >= 1) {
+            const nextEffect = this.eventQueue.shift();
+            nextEffect?.functionCall();
+            setTimeout(() => this.showNextQueueEffect(), (nextEffect?.durationInSeconds || 1) * 1000);
+        } else {
+            this.isQueueWorkerRunning = false
+        }
+    }
+
+    isEffectActive() {
+        return this.isQueueWorkerRunning
+    }
+
     // TODO: Hype-Train-Effect (non-temporary)
     // TODO: Commit nanoleaf client to nodecg-io
 
