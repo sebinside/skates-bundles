@@ -26,7 +26,7 @@ module.exports = function (nodecg: NodeCG) {
         });
         client.onRedemption((message) => {
             nodecg.log.info(`${message.userDisplayName} redeemed ${message.rewardName}`);
-            if (message.rewardName === "Eine Kachel einfärben") {
+            if (message.rewardName === "Ein paar Kacheln einfärben") {
                 if (!isNaN(parseInt(message.message))) {
                     const number = parseInt(message.message);
                     if (number >= 0 && number < 360) {
@@ -34,6 +34,8 @@ module.exports = function (nodecg: NodeCG) {
                         if (nanoleaf.isEffectActive()) {
                             nodecg.log.info("Unable to override current temporary effect.")
                         } else {
+                            sendColor(number);
+                            sendColor(number);
                             sendColor(number);
                         }
                     }
