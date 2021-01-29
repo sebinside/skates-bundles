@@ -217,8 +217,4 @@ export class NanoleafClient {
         return this.isQueueWorkerRunning
     }
 
-    // TODO: Hype-Train-Effect (non-temporary)
-    // TODO: Commit nanoleaf client to nodecg-io
-
-
 }
