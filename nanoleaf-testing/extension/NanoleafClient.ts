@@ -24,11 +24,11 @@ export class NanoleafClient {
 
             const json = await response.json()
             if (json.auth_token) {
-                const authToken = json.auth_token
-                nodecg.log.info(`Your Auth Token is: '${authToken}'.`)
+                const authToken = json.auth_token;
+                nodecg.log.info(`Your Auth Token is: '${authToken}'.`);
             }
         } catch (error) {
-            nodecg.log.warn(errorMessage)
+            nodecg.log.warn(errorMessage);
         }
     }
 
@@ -98,7 +98,7 @@ export class NanoleafClient {
         return this.callGET("")
     }
 
-    async getAllPanelIDs(sorted: boolean): Promise<Array<number>> {
+    async getAllPanelIDs(sortedByY: boolean): Promise<Array<number>> {
         const response = await this.getAllPanelInfo()
 
         if (response.status !== 200) {
@@ -107,7 +107,7 @@ export class NanoleafClient {
 
         const json = await response.json();
         const positionData: Array<any> = json.panelLayout?.layout?.positionData;
-        const panels = sorted ? positionData.sort((a, b) => a.y - b.y) : positionData;
+        const panels = sortedByY ? positionData.sort((a, b) => a.y - b.y) : positionData.sort((a, b) => a.x - b.x);
         const panelIDs = panels
             ?.map((entry: any) => entry.panelId)
             .filter((entry: number) => entry !== 0);
@@ -155,12 +155,12 @@ export class NanoleafClient {
                 }
             }
 
-            this.callPUT("/effects", json)
+            this.callPUT("/effects", json);
         }
     }
 
     getPanelColor(panelId: number) {
-        return this.colors.get(panelId) || {red: 0, blue: 0, green: 0};
+        return this.colors.get(panelId) || { red: 0, blue: 0, green: 0 };
     }
 
     getAllPanelColors() {
@@ -194,8 +194,9 @@ export class NanoleafClient {
 
     private eventQueue: { functionCall: () => any, durationInSeconds: number }[] = [];
     private isQueueWorkerRunning = false;
+    private isQueuePaused = false;
 
-    async queueEvent(functionCall: () => any, durationInSeconds: number) {
+    queueEvent(functionCall: () => any, durationInSeconds: number) {
         this.eventQueue.push({ functionCall, durationInSeconds });
         if (!this.isQueueWorkerRunning) {
             this.isQueueWorkerRunning = true;
@@ -203,13 +204,26 @@ export class NanoleafClient {
         }
     }
 
-    private async showNextQueueEffect() {
+    private showNextQueueEffect() {
         if (this.eventQueue.length >= 1) {
-            const nextEffect = this.eventQueue.shift();
-            nextEffect?.functionCall();
-            setTimeout(() => this.showNextQueueEffect(), (nextEffect?.durationInSeconds || 1) * 1000);
+            if (!this.isQueuePaused) {
+                const nextEffect = this.eventQueue.shift();
+                nextEffect?.functionCall();
+                setTimeout(() => this.showNextQueueEffect(), (nextEffect?.durationInSeconds || 1) * 1000);
+            }
         } else {
             this.isQueueWorkerRunning = false
+        }
+    }
+
+    public pauseQueue() {
+        this.isQueuePaused = true;
+    }
+
+    public resumeQueue() {
+        if(this.isQueuePaused) {
+            this.isQueuePaused = false;
+            this.showNextQueueEffect();
         }
     }
 

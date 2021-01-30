@@ -10,6 +10,8 @@ require('dotenv').config({ path: 'twitch.env' });
 let panels: number[] = []
 let nanoleaf: NanoleafClient;
 
+let hypeTrainLevel = 0;
+
 module.exports = function (nodecg: NodeCG) {
     nodecg.log.info("Nanoleaf testing bundle started!");
     nanoleaf = new NanoleafClient("192.168.178.105", "vT7KxVZhRHAwCzONzugdU8E7MNA6C9XO", nodecg);
@@ -59,7 +61,9 @@ module.exports = function (nodecg: NodeCG) {
                     if (number >= 0 && number < 360) {
                         nodecg.log.info(`Received valid number: ${number}`)
                         if (nanoleaf.isEffectActive()) {
-                            nodecg.log.info("Unable to override current temporary effect.")
+                            nodecg.log.info("Unable to override current temporary effect.");
+                        } else if (hypeTrainLevel > 0) {
+                            nodecg.log.info("Unable to override hype train effect!");
                         } else {
                             sendColor(number);
                             sendColor(number);
@@ -70,13 +74,13 @@ module.exports = function (nodecg: NodeCG) {
             } else if (message.rewardName === "Alle Kacheln zufällig färben") {
                 if (nanoleaf.isEffectActive()) {
                     nodecg.log.info("Unable to override current temporary effect.")
+                } else if (hypeTrainLevel > 0) {
+                    nodecg.log.info("Unable to override hype train effect!");
                 } else {
                     glitter();
                 }
             } else if (message.rewardName === "DEBUG") {
-                let randomNumber = Math.round(Math.random() * 30);
-                nodecg.log.info("Sub event for " + randomNumber);
-                subEvent(randomNumber);
+                doHypeTrain(1);
             }
         });
     });
@@ -186,6 +190,21 @@ function sendColor(value: number) {
     )
 }
 
+async function doHypeTrain(level: number) {
+
+    const panelsByX = await nanoleaf.getAllPanelIDs(false);
+    const transitionTime = 6 - level;
+    const rainbowColors = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    let panelData = panelsByX.map((panelId: number, index: number) => ({
+        panelId: panelId,
+        frames: rainbowColors.map((entry) => ({ color: NanoleafClient.convertHSVtoRGB({ hue: ((entry * (360 / rainbowColors.length) + index * 3) % 360) / 360, saturation: 1, value: 1 }), transitionTime: transitionTime }))
+    }))
+
+    nanoleaf.writeRawEffect("display", "custom", true, panelData)
+}
+
+// This additional request is needed because the library does unfortunately fail :)
 async function getHypeTrain(id: string, clientId: string, token: string) {
     const response = await fetch("https://api.twitch.tv/helix/hypetrain/events?broadcaster_id=" + id, {
         headers: {
@@ -195,16 +214,30 @@ async function getHypeTrain(id: string, clientId: string, token: string) {
     });
 
     const json = await response.json();
-    const level : number | undefined = json.data[0]?.event_data?.level;
-    const expireDate = new Date(json.data[0]?.event_data?.expires_at);
-    const active = expireDate.getTime() - (new Date()).getTime() > 0;
-    return {level, active};
+    if (json.data.length === 0) {
+        return { level: 0, active: false }
+    } else {
+        const level: number = json.data[0]?.event_data?.level!;
+        const expireDate = new Date(json.data[0]?.event_data?.expires_at!);
+        const active = expireDate.getTime() - (new Date()).getTime() > 0;
+        return { level, active };
+    }
 }
 
 async function testForHypeTrain(id: string) {
     const clientId = process.env.CLIENT_ID!;
     const oauthToken = process.env.TWITCH_TOKEN!;
     const data = await getHypeTrain(id, clientId, oauthToken);
-    console.log(`Active: ${data.active}, Level: ${data.level}`);
-    // TODO: Trigger rainbow effect
+
+    if (data.active) {
+        nanoleaf.pauseQueue();
+        if (hypeTrainLevel != data.level) {
+            hypeTrainLevel = data.level;
+            console.log(`Starting hype train with level ${hypeTrainLevel}.`)
+            doHypeTrain(hypeTrainLevel);
+        }
+    } else {
+        nanoleaf.resumeQueue();
+        hypeTrainLevel = 0;
+    }
 }
