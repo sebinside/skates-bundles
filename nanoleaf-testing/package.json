@@ -16,12 +16,10 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "@types/ws": "^7.2.6",
         "@types/node": "^14.6.4",
         "@types/node-fetch": "^2.5.7"
     },
     "dependencies": {
-        "dotenv": "^8.2.0",
         "node-fetch": "^2.6.1",
         "nodecg": "^1.6.1",
         "nodecg-io-core": "^0.1.0",

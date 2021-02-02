@@ -2,10 +2,7 @@ import { NodeCG } from "nodecg/types/server";
 import { PubSubServiceClient } from "nodecg-io-twitch-pubsub/extension";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api/extension";
 import { requireService } from "nodecg-io-core/extension/serviceClientWrapper";
-import fetch from 'node-fetch';
 import { Color, NanoleafClient } from "./NanoleafClient";
-
-require('dotenv').config({ path: 'twitch.env' });
 
 let panels: number[] = []
 let nanoleaf: NanoleafClient;
@@ -32,11 +29,7 @@ module.exports = function (nodecg: NodeCG) {
 
         const channel = await c.helix.users.getMe();
 
-        if (process.env.CLIENT_ID === undefined || process.env.TWITCH_TOKEN === undefined) {
-            nodecg.log.info("Please create a twitch.env file in the nodecg root directory with the information requested above as follows: CLIENT_ID=xyz\nTWITCH_TOKEN=xyz\nwith scope channel:read:hype_train e.g. by using https://twitchapps.com/tokengen/.");
-        } else {
-            setInterval(() => { testForHypeTrain(channel.id) }, 10 * 1000);
-        }
+        setInterval(() => testForHypeTrain(client, channel.id), 10 * 1000);
 
         nodecg.log.info(
             `You are user "${user.name}", following ${follows.total} people and you are ${stream === null ? "not " : ""
@@ -204,30 +197,21 @@ async function doHypeTrain(level: number) {
     nanoleaf.writeRawEffect("display", "custom", true, panelData)
 }
 
-// This additional request is needed because the library does unfortunately fail :)
-async function getHypeTrain(id: string, clientId: string, token: string) {
-    const response = await fetch("https://api.twitch.tv/helix/hypetrain/events?broadcaster_id=" + id, {
-        headers: {
-            "Client-ID": clientId,
-            "Authorization": "Bearer " + token
-        }
-    });
+async function getHypeTrain(twitch: TwitchApiServiceClient, userId: string) {
+    const { data } = await twitch.getNativeClient().helix.hypeTrain.getHypeTrainEventsForBroadcaster(userId);
 
-    const json = await response.json();
-    if (json.data.length === 0) {
+    if (data.length === 0) {
         return { level: 0, active: false }
     } else {
-        const level: number = json.data[0]?.event_data?.level!;
-        const expireDate = new Date(json.data[0]?.event_data?.expires_at!);
+        const level = data[0].level;
+        const expireDate = new Date(data[0].expiryDate);
         const active = expireDate.getTime() - (new Date()).getTime() > 0;
         return { level, active };
     }
 }
 
-async function testForHypeTrain(id: string) {
-    const clientId = process.env.CLIENT_ID!;
-    const oauthToken = process.env.TWITCH_TOKEN!;
-    const data = await getHypeTrain(id, clientId, oauthToken);
+async function testForHypeTrain(twitch: TwitchApiServiceClient, userId: string) {
+    const data = await getHypeTrain(twitch, userId);
 
     if (data.active) {
         nanoleaf.pauseQueue();
