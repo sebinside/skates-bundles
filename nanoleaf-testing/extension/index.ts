@@ -237,7 +237,10 @@ async function testForHypeTrain(id: string) {
             doHypeTrain(hypeTrainLevel);
         }
     } else {
+        if (hypeTrainLevel !== 0) {
+            hypeTrainLevel = 0;
+            glitter();
+        }
         nanoleaf.resumeQueue();
-        hypeTrainLevel = 0;
     }
 }
