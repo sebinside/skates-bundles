@@ -1,9 +1,16 @@
 import { ServiceClientWrapper } from "nodecg-io-core/extension/serviceClientWrapper";
-import { Color, NanoleafServiceClient } from "nodecg-io-nanoleaf";
+import { NanoleafServiceClient } from "nodecg-io-nanoleaf";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { TwitchPubSubServiceClient } from "nodecg-io-twitch-pubsub";
 import { NanoleafUtils } from "nodecg-io-nanoleaf/extension/nanoleafUtils";
 import { NodeCG } from "nodecg/types/server";
+import { PubSubRedemptionMessage } from 'twitch-pubsub-client';
+import { SubEventUtils } from "./SubEventUtils";
+
+interface Redemption {
+    name: string;
+    redeem: (message: PubSubRedemptionMessage) => void;
+}
 
 export class NanoleafEventManager {
     constructor(
@@ -15,7 +22,6 @@ export class NanoleafEventManager {
 
     private panels: number[] = []
     private hypeTrainLevel = 0;
-
 
     async initNanoleafs(): Promise<void> {
         this.panels = await this.nanoleafClient.getClient()?.getAllPanelIDs(true) || [];
@@ -39,83 +45,47 @@ export class NanoleafEventManager {
 
         this.pubsubClient.getClient()?.onRedemption((message) => {
             this.nodecg.log.info(`${message.userDisplayName} redeemed ${message.rewardName}`);
-
-            if (message.rewardName === "Ein paar Kacheln einfärben") {
-                if (!isNaN(parseInt(message.message))) {
-                    const number = parseInt(message.message);
-                    if (number >= 0 && number < 360) {
-                        this.nodecg.log.info(`Received valid number: ${number}`)
-                        if (this.nanoleafClient?.getClient()?.getQueue().isEffectActive()) {
-                            this.nodecg.log.info("Unable to override current temporary effect.");
-                        } else if (this.hypeTrainLevel > 0) {
-                            this.nodecg.log.info("Unable to override hype train effect!");
-                        } else {
-                            this.sendColor(number);
-                            this.sendColor(number);
-                            this.sendColor(number);
-                        }
-                    }
-                }
-            } else if (message.rewardName === "Alle Kacheln zufällig färben") {
-                if (this.nanoleafClient?.getClient()?.getQueue().isEffectActive()) {
-                    this.nodecg.log.info("Unable to override current temporary effect.")
-                } else if (this.hypeTrainLevel > 0) {
-                    this.nodecg.log.info("Unable to override hype train effect!");
-                } else {
-                    this.glitter();
-                }
-            } else if (message.rewardName === "DEBUG") {
-                this.doHypeTrain(1);
-            }
+            this.redemptions.find((value) => value.name === message.rewardName)?.redeem(message);
         });
     }
 
-
-    private shuffleArray(input: Array<number>) {
-        const array = [...input];
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+    private redemptions: Redemption[] = [
+        {
+            name: "DEBUG",
+            redeem: () => { this.doHypeTrain(1); }
+        },
+        {
+            name: "Ein paar Kacheln einfärben",
+            redeem: (message) => {
+                if (!isNaN(parseInt(message?.message))) {
+                    const number = parseInt(message?.message);
+                    if (number >= 0 && number < 360) {
+                        this.nodecg.log.info(`Received valid number: ${number}`)
+                        this.executeEffectIfPossible(() => {
+                            this.sendColor(number);
+                            this.sendColor(number);
+                            this.sendColor(number);
+                        })
+                    }
+                }
+            }
+        },
+        {
+            name: "Alle Kacheln zufällig färben",
+            redeem: () => {
+                this.executeEffectIfPossible(() => { this.glitter() });
+            }
         }
-        return array;
-    }
-
-    private subColors: Color[] = [
-        { red: 255, green: 123, blue: 0 }, // 0 - 2
-        { red: 98, green: 98, blue: 98 }, // 3 - 5
-        { red: 255, green: 222, blue: 0 }, // 6 - 11
-        { red: 0, green: 255, blue: 228 }, // 12+
-        { red: 0, green: 255, blue: 90 },
-        { red: 0, green: 120, blue: 255 },
-        { red: 99, green: 255, blue: 0 },
-        { red: 56, green: 56, blue: 56 },
-        { red: 247, green: 247, blue: 247 },
-        { red: 255, green: 98, blue: 0 },
-        { red: 0, green: 238, blue: 255 }
     ]
 
-    private retrieveSubIconColor(months: number): Color {
-        return this.subColors[this.retrieveSubColorIndex(months)];
-    }
-
-    private isSubMilestone(months: number): boolean {
-        return months === 3 || months === 6 || months % 12 === 0;
-    }
-
-    private retrieveSubColorIndex(months: number): number {
-        if (months < 3) {
-            return 0;
-        } else if (months < 6) {
-            return 1;
-        } else if (months < 12) {
-            return 2;
+    private executeEffectIfPossible(effect: () => void) {
+        if (this.nanoleafClient?.getClient()?.getQueue().isEffectActive()) {
+            this.nodecg.log.info("Unable to override current temporary effect.")
+        } else if (this.hypeTrainLevel > 0) {
+            this.nodecg.log.info("Unable to override hype train effect!");
         } else {
-            return Math.min(Math.floor(months / 12) + 2, this.subColors.length - 1);
+            effect();
         }
-    }
-
-    private retrievePreviousSubIconColor(months: number): Color {
-        return this.subColors[Math.max(this.retrieveSubColorIndex(months) - 1, 0)];
     }
 
     private subEvent(months: number) {
@@ -123,8 +93,8 @@ export class NanoleafEventManager {
         const transitionTime = 1;
         const extraDelay = 2;
 
-        const color = this.isSubMilestone(months) ? this.retrievePreviousSubIconColor(months) : this.retrieveSubIconColor(months);
-        const shuffledPanels = this.shuffleArray(this.panels);
+        const color = SubEventUtils.isSubMilestone(months) ? SubEventUtils.retrievePreviousSubIconColor(months) : SubEventUtils.retrieveSubIconColor(months);
+        const shuffledPanels = SubEventUtils.shuffleArray(this.panels);
 
         const panelData = shuffledPanels.map((panelId: number, index: number) => ({
             panelId: panelId,
@@ -132,9 +102,9 @@ export class NanoleafEventManager {
             { color: color, transitionTime: transitionTime }, { color: color, transitionTime: (this.panels.length - index) * transitionTime + this.panels.length / 2 }]
         }))
 
-        if (this.isSubMilestone(months)) {
+        if (SubEventUtils.isSubMilestone(months)) {
             this.nodecg.log.info(`Sub Milestone! ${months / 12} years!`);
-            const nextColor = this.retrieveSubIconColor(months);
+            const nextColor = SubEventUtils.retrieveSubIconColor(months);
 
             this.panels.forEach((pandelId: number, index: number) => {
                 panelData.find((entry) => entry.panelId === pandelId)?.frames.push({ color: color, transitionTime: transitionTime * index }, { color: nextColor, transitionTime: transitionTime }, { color: nextColor, transitionTime: (this.panels.length - index) * transitionTime + this.panels.length })
@@ -149,11 +119,6 @@ export class NanoleafEventManager {
             { color: this.nanoleafClient.getClient()?.getPanelColor(entry.panelId) || { red: 0, blue: 0, green: 0 }, transitionTime: index * transitionTime }))
 
         this.nanoleafClient.getClient()?.getQueue().queueEvent(() => this.nanoleafClient.getClient()?.writeRawEffect("displayTemp", "custom", false, panelData, effectDuration), effectDuration + extraDelay)
-    }
-
-    private generateRandomFullySaturatedColor() {
-        return NanoleafUtils.convertHSVtoRGB(
-            { hue: Math.random(), saturation: 1, value: 1 });
     }
 
     private async glitter() {
@@ -171,6 +136,11 @@ export class NanoleafEventManager {
                 { hue: value / 360, saturation: 1, value: 1 }
             )
         )
+    }
+
+    private generateRandomFullySaturatedColor() {
+        return NanoleafUtils.convertHSVtoRGB(
+            { hue: Math.random(), saturation: 1, value: 1 });
     }
 
     private async doHypeTrain(level: number) {
