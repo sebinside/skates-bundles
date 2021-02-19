@@ -1,50 +1,55 @@
 import { NodeCG } from "nodecg/types/server";
-import { PubSubServiceClient } from "nodecg-io-twitch-pubsub/extension";
-import { TwitchApiServiceClient } from "nodecg-io-twitch-api/extension";
-import { requireService } from "nodecg-io-core/extension/serviceClientWrapper";
-import { Color, NanoleafClient } from "./NanoleafClient";
+import { TwitchPubSubServiceClient } from "nodecg-io-twitch-pubsub";
+import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
+import { Color, NanoleafServiceClient, NanoleafUtils } from "nodecg-io-nanoleaf";
+import { requireService } from "nodecg-io-core";
 
 let panels: number[] = []
-let nanoleaf: NanoleafClient;
-
 let hypeTrainLevel = 0;
 
 module.exports = function (nodecg: NodeCG) {
-    nodecg.log.info("Nanoleaf testing bundle started!");
-    nanoleaf = new NanoleafClient("192.168.178.105", "vT7KxVZhRHAwCzONzugdU8E7MNA6C9XO", nodecg);
-    nanoleaf.getAllPanelIDs(true).then(iDs => panels = iDs);
-    nanoleaf.setState(true);
-    nanoleaf.setBrightness(25);
-    glitter();
-
-    const pubsub = requireService<PubSubServiceClient>(nodecg, "twitch-pubsub");
+    nodecg.log.info("Nanoleaf event bundle started!");
+    const nanoleafClient = requireService<NanoleafServiceClient>(nodecg, "nanoleaf");
+    const pubsub = requireService<TwitchPubSubServiceClient>(nodecg, "twitch-pubsub");
     const twitchApi = requireService<TwitchApiServiceClient>(nodecg, "twitch-api");
 
+    // Nanoleaf service
+    nanoleafClient?.onAvailable(async (client) => {
+        nodecg.log.info("Nanoleaf client has been updated.");
+
+        panels = await client.getAllPanelIDs(true);
+        await client.setState(true);
+        await client.setBrightness(25);
+        glitter(client);
+    });
+    nanoleafClient?.onUnavailable(() => nodecg.log.info("Nanoleaf client has been unset."));
+
+    // Twitch api service
     twitchApi?.onAvailable(async (client) => {
         nodecg.log.info("Twitch api client has been updated, getting user info.");
-        const c = client.getNativeClient();
-        const user = await c.helix.users.getMe();
+
+        const user = await client.helix.users.getMe();
         const follows = await user.getFollows();
         const stream = await user.getStream();
 
-        const channel = await c.helix.users.getMe();
+        const channel = await client.helix.users.getMe();
 
-        setInterval(() => testForHypeTrain(client, channel.id), 10 * 1000);
+        setInterval(() => testForHypeTrain(client, channel.id, nanoleafClient?.getClient(), nodecg), 10 * 1000);
 
         nodecg.log.info(
             `You are user "${user.name}", following ${follows.total} people and you are ${stream === null ? "not " : ""
             }streaming.`,
         );
     });
-
     twitchApi?.onUnavailable(() => nodecg.log.info("Twitch api client has been unset."));
 
+    // Twitch pubsub service
     pubsub?.onAvailable((client) => {
         nodecg.log.info("PubSub client has been updated, adding handlers for messages.");
         client.onSubscription((message) => {
             nodecg.log.info(`${message.userDisplayName} just subscribed (${message.cumulativeMonths} months)`);
 
-            subEvent(message.cumulativeMonths);
+            subEvent(message.cumulativeMonths, nanoleafClient?.getClient(), nodecg);
         });
         client.onRedemption((message) => {
             nodecg.log.info(`${message.userDisplayName} redeemed ${message.rewardName}`);
@@ -53,27 +58,27 @@ module.exports = function (nodecg: NodeCG) {
                     const number = parseInt(message.message);
                     if (number >= 0 && number < 360) {
                         nodecg.log.info(`Received valid number: ${number}`)
-                        if (nanoleaf.isEffectActive()) {
+                        if (nanoleafClient?.getClient()?.getQueue().isEffectActive()) {
                             nodecg.log.info("Unable to override current temporary effect.");
                         } else if (hypeTrainLevel > 0) {
                             nodecg.log.info("Unable to override hype train effect!");
                         } else {
-                            sendColor(number);
-                            sendColor(number);
-                            sendColor(number);
+                            sendColor(number, nanoleafClient?.getClient());
+                            sendColor(number, nanoleafClient?.getClient());
+                            sendColor(number, nanoleafClient?.getClient());
                         }
                     }
                 }
             } else if (message.rewardName === "Alle Kacheln zufällig färben") {
-                if (nanoleaf.isEffectActive()) {
+                if (nanoleafClient?.getClient()?.getQueue().isEffectActive()) {
                     nodecg.log.info("Unable to override current temporary effect.")
                 } else if (hypeTrainLevel > 0) {
                     nodecg.log.info("Unable to override hype train effect!");
                 } else {
-                    glitter();
+                    glitter(nanoleafClient?.getClient());
                 }
             } else if (message.rewardName === "DEBUG") {
-                doHypeTrain(1);
+                doHypeTrain(1, nanoleafClient?.getClient());
             }
         });
     });
@@ -128,7 +133,7 @@ function retrievePreviousSubIconColor(months: number): Color {
     return subColors[Math.max(retrieveSubColorIndex(months) - 1, 0)];
 }
 
-function subEvent(months: number) {
+function subEvent(months: number, nanoleafClient: NanoleafServiceClient | undefined, nodecg: NodeCG) {
     let effectDuration = 7;
     const transitionTime = 1;
     const extraDelay = 2;
@@ -136,14 +141,14 @@ function subEvent(months: number) {
     const color = isSubMilestone(months) ? retrievePreviousSubIconColor(months) : retrieveSubIconColor(months);
     const shuffledPanels = shuffleArray(panels);
 
-    let panelData = shuffledPanels.map((panelId: number, index: number) => ({
+    const panelData = shuffledPanels.map((panelId: number, index: number) => ({
         panelId: panelId,
-        frames: [{ color: nanoleaf.getPanelColor(panelId), transitionTime: index * transitionTime },
+        frames: [{ color: nanoleafClient?.getPanelColor(panelId) || { red: 0, blue: 0, green: 0 }, transitionTime: index * transitionTime },
         { color: color, transitionTime: transitionTime }, { color: color, transitionTime: (panels.length - index) * transitionTime + panels.length / 2 }]
     }))
 
     if (isSubMilestone(months)) {
-        console.log(`Sub Milestone! ${months / 12} years!`);
+        nodecg.log.info(`Sub Milestone! ${months / 12} years!`);
         const nextColor = retrieveSubIconColor(months);
 
         panels.forEach((pandelId: number, index: number) => {
@@ -156,49 +161,49 @@ function subEvent(months: number) {
     }
 
     panelData.forEach((entry, index) => entry.frames.push(
-        { color: nanoleaf.getPanelColor(entry.panelId), transitionTime: index * transitionTime }))
+        { color: nanoleafClient?.getPanelColor(entry.panelId) || { red: 0, blue: 0, green: 0 }, transitionTime: index * transitionTime }))
 
-    nanoleaf.queueEvent(() => nanoleaf.writeRawEffect("displayTemp", "custom", false, panelData, effectDuration), effectDuration + extraDelay)
+    nanoleafClient?.getQueue().queueEvent(() => nanoleafClient?.writeRawEffect("displayTemp", "custom", false, panelData, effectDuration), effectDuration + extraDelay)
 }
 
 function generateRandomFullySaturatedColor() {
-    return NanoleafClient.convertHSVtoRGB(
+    return NanoleafUtils.convertHSVtoRGB(
         { hue: Math.random(), saturation: 1, value: 1 });
 }
 
-function glitter() {
+async function glitter(nanoleafClient: NanoleafServiceClient | undefined) {
     const data = panels.map(entry => ({
         panelId: entry,
         color: generateRandomFullySaturatedColor()
     }))
 
-    nanoleaf.setPanelColors(data);
+    await nanoleafClient?.setPanelColors(data);
 }
 
-function sendColor(value: number) {
-    nanoleaf.setPanelColor(panels[Math.floor(Math.random() * panels.length)],
-        NanoleafClient.convertHSVtoRGB(
+function sendColor(value: number, nanoleafClient: NanoleafServiceClient | undefined) {
+    nanoleafClient?.setPanelColor(panels[Math.floor(Math.random() * panels.length)],
+        NanoleafUtils.convertHSVtoRGB(
             { hue: value / 360, saturation: 1, value: 1 }
         )
     )
 }
 
-async function doHypeTrain(level: number) {
+async function doHypeTrain(level: number, nanoleafClient: NanoleafServiceClient | undefined) {
 
-    const panelsByX = await nanoleaf.getAllPanelIDs(false);
+    const panelsByX = await nanoleafClient?.getAllPanelIDs(false) || [];
     const transitionTime = 6 - level;
     const rainbowColors = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    let panelData = panelsByX.map((panelId: number, index: number) => ({
+    const panelData = panelsByX.map((panelId: number, index: number) => ({
         panelId: panelId,
-        frames: rainbowColors.map((entry) => ({ color: NanoleafClient.convertHSVtoRGB({ hue: ((entry * (360 / rainbowColors.length) + index * 3) % 360) / 360, saturation: 1, value: 1 }), transitionTime: transitionTime }))
+        frames: rainbowColors.map((entry) => ({ color: NanoleafUtils.convertHSVtoRGB({ hue: ((entry * (360 / rainbowColors.length) + index * 3) % 360) / 360, saturation: 1, value: 1 }), transitionTime: transitionTime }))
     }))
 
-    nanoleaf.writeRawEffect("display", "custom", true, panelData)
+    nanoleafClient?.writeRawEffect("display", "custom", true, panelData)
 }
 
 async function getHypeTrain(twitch: TwitchApiServiceClient, userId: string) {
-    const { data } = await twitch.getNativeClient().helix.hypeTrain.getHypeTrainEventsForBroadcaster(userId);
+    const { data } = await twitch.helix.hypeTrain.getHypeTrainEventsForBroadcaster(userId);
 
     if (data.length === 0) {
         return { level: 0, active: false }
@@ -210,21 +215,21 @@ async function getHypeTrain(twitch: TwitchApiServiceClient, userId: string) {
     }
 }
 
-async function testForHypeTrain(twitch: TwitchApiServiceClient, userId: string) {
+async function testForHypeTrain(twitch: TwitchApiServiceClient, userId: string, nanoleafClient: NanoleafServiceClient | undefined, nodecg: NodeCG) {
     const data = await getHypeTrain(twitch, userId);
 
     if (data.active) {
-        nanoleaf.pauseQueue();
+        nanoleafClient?.getQueue().pauseQueue();
         if (hypeTrainLevel != data.level) {
             hypeTrainLevel = data.level;
-            console.log(`Starting hype train with level ${hypeTrainLevel}.`)
-            doHypeTrain(hypeTrainLevel);
+            nodecg.log.info(`Starting hype train with level ${hypeTrainLevel}.`)
+            doHypeTrain(hypeTrainLevel, nanoleafClient);
         }
     } else {
         if (hypeTrainLevel !== 0) {
             hypeTrainLevel = 0;
-            glitter();
+            glitter(nanoleafClient);
         }
-        nanoleaf.resumeQueue();
+        nanoleafClient?.getQueue().resumeQueue();
     }
 }
