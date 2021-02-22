@@ -1,4 +1,4 @@
-import { ServiceClientWrapper } from "nodecg-io-core/extension/serviceClientWrapper";
+import { ServiceProvider } from "nodecg-io-core";
 import { NanoleafServiceClient } from "nodecg-io-nanoleaf";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { TwitchPubSubServiceClient } from "nodecg-io-twitch-pubsub";
@@ -14,9 +14,9 @@ interface Redemption {
 
 export class NanoleafEventManager {
     constructor(
-        private nanoleafClient: ServiceClientWrapper<NanoleafServiceClient>,
-        private twitchClient: ServiceClientWrapper<TwitchApiServiceClient>,
-        private pubsubClient: ServiceClientWrapper<TwitchPubSubServiceClient>,
+        private nanoleafClient: ServiceProvider<NanoleafServiceClient>,
+        private twitchClient: ServiceProvider<TwitchApiServiceClient>,
+        private pubsubClient: ServiceProvider<TwitchPubSubServiceClient>,
         private nodecg: NodeCG
     ) { }
 
