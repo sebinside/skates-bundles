@@ -14,7 +14,7 @@ module.exports = function (nodecg: NodeCG) {
 
     if (nanoleafClient !== undefined && pubsub !== undefined && twitchApi !== undefined) {
         const manager = new NanoleafEventManager(nanoleafClient, twitchApi, pubsub, nodecg);
-
+        
         // Nanoleaf service
         nanoleafClient?.onAvailable(() => {
             nodecg.log.info("NanoleafClient is available.");

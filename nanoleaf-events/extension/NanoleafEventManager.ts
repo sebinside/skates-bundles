@@ -23,7 +23,14 @@ export class NanoleafEventManager {
     private panels: number[] = []
     private hypeTrainLevel = 0;
 
+    private testForCompleteness() {
+        if(this.nanoleafClient.getClient() && this.twitchClient.getClient() && this.pubsubClient.getClient()) {
+            this.nodecg.log.info("All required services are available.");
+        }
+    }
+
     async initNanoleafs(): Promise<void> {
+        this.testForCompleteness();
         this.panels = await this.nanoleafClient.getClient()?.getAllPanelIDs(true) || [];
         await this.nanoleafClient.getClient()?.setState(true);
         await this.nanoleafClient.getClient()?.setBrightness(25);
@@ -31,6 +38,7 @@ export class NanoleafEventManager {
     }
 
     async initTwitch(): Promise<void> {
+        this.testForCompleteness();
         const channel = await this.twitchClient.getClient()?.helix.users.getMe();
         if (channel !== undefined) {
             setInterval(() => this.testForHypeTrain(channel.id), 10 * 1000);
@@ -38,6 +46,7 @@ export class NanoleafEventManager {
     }
 
     async initPubSub(): Promise<void> {
+        this.testForCompleteness();
         this.pubsubClient.getClient()?.onSubscription((message) => {
             this.nodecg.log.info(`${message.userDisplayName} just subscribed (${message.cumulativeMonths} months)`);
             this.subEvent(message.cumulativeMonths);
@@ -52,7 +61,7 @@ export class NanoleafEventManager {
     private redemptions: Redemption[] = [
         {
             name: "DEBUG",
-            redeem: () => { this.doHypeTrain(1); }
+            redeem: () => { this.doHypeTrain(5); }
         },
         {
             name: "Ein paar Kacheln einfärben",
