@@ -33,7 +33,7 @@ export class WasCommandManager {
                 this.nodecg.log.info(`Connected !was-manager to twitch channel "${channel}"`);
     
                 this.chatClient.getClient()?.onMessage((chan, _, message, _msg) => {
-                    if (chan === channel.toLowerCase() && message === WasCommandManager.COMMAND) {
+                    if (chan === channel.toLowerCase() && message.startsWith(`${WasCommandManager.COMMAND} `)) {
                         this.postMessage();
                     }
                 });
