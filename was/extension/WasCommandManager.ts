@@ -10,7 +10,7 @@ export class WasCommandManager {
     ) { }
 
     public static readonly CHANNEL = "#skate702"
-    public static readonly COMMAND = "!was"
+    public static readonly COMMAND = /^!was(\s.*|$)/
     public static readonly TIMEOUT_IN_SECONDS = 10
 
     private lastMessage = Date.now();
@@ -33,7 +33,7 @@ export class WasCommandManager {
                 this.nodecg.log.info(`Connected !was-manager to twitch channel "${channel}"`);
     
                 this.chatClient.getClient()?.onMessage((chan, _, message, _msg) => {
-                    if (chan === channel.toLowerCase() && message === WasCommandManager.COMMAND) {
+                    if (chan === channel.toLowerCase() && message.match(WasCommandManager.COMMAND)) {
                         this.postMessage();
                     }
                 });
