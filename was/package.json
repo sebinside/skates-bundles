@@ -5,7 +5,8 @@
     "nodecg": {
         "compatibleRange": "^1.1.1",
         "bundleDependencies": {
-            "nodecg-io-twitch-chat": "^0.2.0"
+            "nodecg-io-twitch-chat": "^0.2.0",
+            "nodecg-io-twitch-api": "^0.2.0"
         }
     },
     "scripts": {
@@ -24,6 +25,7 @@
         "nodecg": "^1.8.1",
         "nodecg-io-core": "^0.2.0",
         "nodecg-io-twitch-chat": "^0.2.0",
+        "nodecg-io-twitch-api": "^0.2.0",
         "skates-utils": "^0.2.0"
     }
 }
