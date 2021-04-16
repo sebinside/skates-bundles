@@ -1,0 +1,52 @@
+.container {
+    display: inline-block;
+    border: 1px dashed rgb(64, 64, 64);
+    background-color: rgb(44, 44, 44);
+    padding: 0;
+    margin: 10px;
+    min-width: 200px;
+    min-height: 100px;
+    box-shadow: 6px 5px 15px 3px rgba(0, 0, 0, 0.52);
+}
+
+.containerHead {
+    display: block;
+    color: #92d6d6;
+    padding-top: 1px;
+    font-size: large;
+    border-bottom: 1px dashed rgb(64, 64, 64);
+    background-color: rgb(55, 55, 55);
+}
+
+.containerTitle {
+    font-weight: bold;
+}
+
+.containerBody {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: large;
+}
+
+.containerHead,
+.containerBody {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+body {
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+button {
+    border: 1px solid gray;
+    color: white;
+    background-color: rgb(70, 70, 70);
+    font-size: large;
+}
+
+button:active {
+    background-color: rgb(90, 90, 90);
+}

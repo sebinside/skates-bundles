@@ -7,7 +7,16 @@
         "bundleDependencies": {
             "nodecg-io-twitch-chat": "^0.2.0",
             "nodecg-io-twitch-api": "^0.2.0"
-        }
+        },
+        "dashboardPanels": [
+            {
+                "name": "skates-bundles-was",
+                "title": "!was config",
+                "file": "was.html",
+                "fullbleed": true,
+                "headerColor": "#527878"
+            }
+        ]
     },
     "scripts": {
         "build": "tsc -b",
