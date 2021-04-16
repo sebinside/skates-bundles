@@ -3,7 +3,7 @@ import { TwitchChatServiceClient } from "nodecg-io-twitch-chat";
 import { NodeCG } from "nodecg/types/server";
 import { Manager } from "skates-utils";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
-import { Defaults } from "./defaults";
+import { MessageController } from "./MessageController";
 
 export class WasCommandManager extends Manager {
     constructor(
@@ -21,6 +21,8 @@ export class WasCommandManager extends Manager {
     public static readonly TIMEOUT_IN_SECONDS = 10
 
     private lastMessage = Date.now();
+
+    private messageController = new MessageController(this.nodecg);
 
     async initChat(): Promise<void> {
         this.addListener(WasCommandManager.CHANNEL);
@@ -49,9 +51,8 @@ export class WasCommandManager extends Manager {
 
             const game = await this.retrieveCurrentGame() || "";
 
-            // TODO: Remove direct defaults reference, use Replicants instead
-            if(Defaults.messages.has(game)) {
-                this.chatClient?.getClient()?.say(WasCommandManager.CHANNEL, Defaults.messages.get(game)?.toString() || "");
+            if (this.messageController.hasMessage(game)) {
+                this.chatClient?.getClient()?.say(WasCommandManager.CHANNEL, this.messageController.getMessage(game)?.toString() || "");
             } else {
                 this.nodecg.log.info(`Unable to find !was output for game: ${game}`);
             }
