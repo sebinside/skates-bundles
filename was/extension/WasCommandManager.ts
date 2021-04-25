@@ -13,7 +13,7 @@ export class WasCommandManager extends Manager {
     ) {
         super("!was Command", nodecg);
         this.register(this.chatClient, "Twitch chat client", () => this.initChat());
-        this.register(this.twitchApiClient, "Twitch api client", async () => { /* nothing to do here */ });
+        this.register(this.twitchApiClient, "Twitch api client", async () => { this.initApiClient() });
     }
 
     public static readonly CHANNEL = "#skate702"
@@ -26,6 +26,15 @@ export class WasCommandManager extends Manager {
 
     async initChat(): Promise<void> {
         this.addListener(WasCommandManager.CHANNEL);
+    }
+
+    async initApiClient(): Promise<void> {
+        this.nodecg.listenFor("retrieveCurrentGame", async (_, ack) => {
+            if(ack && !ack.handled) {
+                const game = await this.retrieveCurrentGame() || "";
+                ack(null, game);
+            }
+        })
     }
 
     private addListener(channel: string) {

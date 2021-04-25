@@ -5,12 +5,34 @@
     </head>
 
     <body>
-        <div class="container" id="test">
+        <div class="container" id="config">
             <div class="containerHead">
-                <span class="containerTitle">Title</span>
+                <span class="containerTitle">!was config</span>
             </div>
             <div class="containerBody">
-                Body
+                <button id="retrieveCurrentGame">Retrieve current game</button>
+                <br><br>
+                <button id="save">Save all answers</button>
+                <br><br>
+                <button id="addAnswer">Add answer</button>
+            </div>
+        </div>
+
+        <div class="container" id="test">
+            <div class="containerHead">
+                <span class="containerTitle">Game:</span>
+                <input type="text" id="testHeader">
+            </div>
+            <div class="containerBody">
+                <table>
+                    <tr><td>Answer: </td><td><textarea></textarea></td></tr>
+                    <tr><td>Link: </td><td><input type="text"></td></tr>
+                    <tr><td>Project: </td><td><select><option>Loading...</option></select></td></tr>
+                    <tr><td>Language: </td><td><select><option>Loading...</option></select></td></tr>
+                    <tr><td>Editor: </td><td><select><option>Loading...</option></select></td></tr>
+                    <tr><td>Theme: </td><td><select><option>Loading...</option></select></td></tr>
+                </table>
+                 
             </div>
         </div>
 

@@ -11,7 +11,7 @@
 
 .containerHead {
     display: block;
-    color: #92d6d6;
+    color: #6194cf;
     padding-top: 1px;
     font-size: large;
     border-bottom: 1px dashed rgb(64, 64, 64);
@@ -32,6 +32,7 @@
 .containerBody {
     padding-left: 10px;
     padding-right: 10px;
+    font-size: larger;
 }
 
 body {
@@ -49,4 +50,18 @@ button {
 
 button:active {
     background-color: rgb(90, 90, 90);
+}
+
+input[type="text"],
+select,
+textarea {
+    font-size: large;
+    color: white;
+    background-color: rgb(70, 70, 70);
+    border: 1px solid rgb(20, 20, 20);
+    width: 250px;
+}
+
+.containerHead > input[type="text"] {
+    margin-left:33px;
 }

@@ -11,7 +11,7 @@ module.exports = function (nodecg: NodeCG) {
     // Required scopes: channel:read:hype_train
     const twitchApi = requireService<TwitchApiServiceClient>(nodecg, "twitch-api");
 
-    // Required scopes: ??? =>
+    // Required scopes: channel:read:redemptions channel:read:subscriptions channel_subscriptions
     const pubsub = requireService<TwitchPubSubServiceClient>(nodecg, "twitch-pubsub");
     
     new NanoleafEventManager(nanoleafClient, twitchApi, pubsub, nodecg);
