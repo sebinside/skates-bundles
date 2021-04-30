@@ -58,7 +58,8 @@ export class MessageController {
         return this.messages?.value[game] !== undefined || false;
     }
 
+    // Convention (because of the lack of OOP): empty project == gaming message
     private isGamingMessage(message: Message | undefined): boolean | undefined {
-        return message?.project === undefined
+        return message?.project === undefined || message.project === ""
     }
 }

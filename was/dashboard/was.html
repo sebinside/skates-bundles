@@ -18,21 +18,23 @@
             </div>
         </div>
 
-        <div class="container" id="test">
-            <div class="containerHead">
-                <span class="containerTitle">Game:</span>
-                <input type="text" id="testHeader">
-            </div>
-            <div class="containerBody">
-                <table>
-                    <tr><td>Answer: </td><td><textarea></textarea></td></tr>
-                    <tr><td>Link: </td><td><input type="text"></td></tr>
-                    <tr><td>Project: </td><td><select><option>Loading...</option></select></td></tr>
-                    <tr><td>Language: </td><td><select><option>Loading...</option></select></td></tr>
-                    <tr><td>Editor: </td><td><select><option>Loading...</option></select></td></tr>
-                    <tr><td>Theme: </td><td><select><option>Loading...</option></select></td></tr>
-                </table>
-                 
+        <div id="template">
+            <div class="container" id="CIDContainer">
+                <div class="containerHead">
+                    <span class="containerTitle">Game:</span>
+                    <input type="text" id="CIDGame">
+                </div>
+                <div class="containerBody">
+                    <table>
+                        <tr><td>Answer: </td><td><textarea id="CIDAnswer"></textarea></td></tr>
+                        <tr><td>Link: </td><td><input type="text" id="CIDLink"></td></tr>
+                        <tr><td colspan="2"><div class="tableBreak">Convention: Empty project == Gaming message</div></td></tr>
+                        <tr><td>Project: </td><td><select id="CIDProject"><option>Loading...</option></select></td></tr>
+                        <tr><td>Language: </td><td><select id="CIDLanguage"><option>Loading...</option></select></td></tr>
+                        <tr><td>Editor: </td><td><select id="CIDEditor"><option>Loading...</option></select></td></tr>
+                        <tr><td>Theme: </td><td><select id="CIDTheme"><option>Loading...</option></select></td></tr>
+                    </table>     
+                </div>
             </div>
         </div>
 

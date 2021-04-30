@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+let answerCounter = 42;
+
 document.querySelector("#retrieveCurrentGame").onclick = () => {
     nodecg.sendMessage("retrieveCurrentGame")
         .then(result => {
@@ -6,4 +8,9 @@ document.querySelector("#retrieveCurrentGame").onclick = () => {
         }).catch(error => {
             nodecg.log.error(error);
         })
+}
+
+document.querySelector("#addAnswer").onclick = () => {
+    const html = document.querySelector("#template").innerHTML.replaceAll("CID", answerCounter++);
+    document.body.insertAdjacentHTML("beforeend", html);
 }

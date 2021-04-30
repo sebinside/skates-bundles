@@ -9,6 +9,16 @@
     box-shadow: 6px 5px 15px 3px rgba(0, 0, 0, 0.52);
 }
 
+.tableBreak {
+    border-top: 1px dashed rgb(64, 64, 64);
+    margin-top: 10px;
+    font-size: smaller;
+    padding-top: 10px;
+    margin-bottom: 5px;
+    color: gray;
+    font-style: italic;
+}
+
 .containerHead {
     display: block;
     color: #6194cf;
@@ -64,4 +74,12 @@ textarea {
 
 .containerHead > input[type="text"] {
     margin-left:33px;
+}
+
+textarea {
+    height: 120px;
+}
+
+#template {
+    display: none;
 }
