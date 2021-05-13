@@ -5,7 +5,6 @@ export class MessageController {
     private static readonly defaultMessages: Record<string, Message> = {
         "Science & Technology":
         {
-            active: true,
             content: "Sebastian programmiert einen !was chat bot",
             hyperlink: "702.yt/was",
             project: "nodecg.io",
@@ -14,12 +13,10 @@ export class MessageController {
             theme: "monokai"
         },
         "Watch Dogs: Legion": {
-            active: true,
             content: "Sebastian spielt Uhren-Hunde. Wau wau!",
             hyperlink: "702.yt/was"
         },
         "Minecraft": {
-            active: true,
             content: "Sebastian baut ein neues Minecraft Skyblock Modpack",
             hyperlink: "702.yt/was",
             project: "Skyblock-Nachfolger",

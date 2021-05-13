@@ -1,9 +1,14 @@
 /* eslint-disable no-undef */
-let answerCounter = 42;
+let answerCounter = 0;
 let projects = [""];
 let languages = [""];
 let editors = [""];
 let themes = [""];
+
+const inactiveAnswer = "_INACTIVE_";
+
+// TODO: Add Extended Answer
+// TODO: Add Delete Button + missing number handling in collectAnswers()
 
 document.querySelector("#retrieveCurrentGame").onclick = () => {
     nodecg.sendMessage("retrieveCurrentGame")
@@ -20,33 +25,89 @@ document.querySelector("#retrieveCurrentGame").onclick = () => {
 }
 
 document.querySelector("#addAnswer").onclick = () => {
-    addAnswer("", true, "", "", "", "", "", "");
+    addAnswer("", "", "", "", "", "", "");
 }
 
 document.querySelector("#save").onclick = () => {
     const answers = collectAnswers();
-    if(validateAnswers(answers)) {
+    if (validateAnswers(answers)) {
         saveAnswers(answers);
     }
 }
 
 function collectAnswers() {
-    // TODO
+    let answers = {};
+
+    if (answerCounter == 0) {
+        return answers;
+    }
+
+    for (let id = 0; id < answerCounter; id++) {
+        let game = document.querySelector(`#Game${id}`).value;
+
+        if (!document.querySelector(`#Active${id}`).checked) {
+            game = `${game}${inactiveAnswer}${id}`;
+        }
+
+        const answer = {
+            content: document.querySelector(`#Answer${id}`).value,
+            hyperlink: document.querySelector(`#Link${id}`).value,
+            project: document.querySelector(`#Project${id}`).value,
+            language: document.querySelector(`#Language${id}`).value,
+            editor: document.querySelector(`#Editor${id}`).value,
+            theme: document.querySelector(`#Theme${id}`).value
+        }
+
+        if (answers[game] !== undefined) {
+            window.alert(`Duplicated game: ${game}`);
+            return {};
+        } else {
+            answers[game] = answer;
+        }
+    }
+
+    return answers;
 }
 
-function validateAnswers() {
-    // TODO
+function validateAnswers(answers) {
+    const keys = Object.keys(answers);
+
+    if(keys.length === 0) {
+        return false;
+    }
+
+    // Check if required fields are set
+    for (let game of keys) {
+        const answer = answers[game];
+
+        if (game === "") {
+            window.alert("Invalid game.");
+            return false;
+        } else if (answer.content === "") {
+            window.alert("Empty content of a game.");
+            return false;
+        }
+
+    }
+    return true;
 }
 
-function saveAnswers() {
-    // TODO
+function saveAnswers(answers) {
+    nodecg.log.info("Saving answers.");
+    nodecg.Replicant('was.messages').value = answers;
 }
 
 function resetAnswers() {
-    // TODO
+    if (answerCounter !== 0) {
+        for (let i = 0; i < answerCounter; i++) {
+            const child = document.querySelector(`#Container${i}`);
+            child.parentElement.removeChild(child);
+        }
+        answerCounter = 0;
+    }
 }
 
-function addAnswer(game, active, content, hyperlink, project, language, editor, theme) {
+function addAnswer(game, content, hyperlink, project, language, editor, theme) {
     const id = answerCounter++;
     const html = document.querySelector("#template").innerHTML.replaceAll("CID", id);
     document.body.insertAdjacentHTML("beforeend", html);
@@ -56,7 +117,15 @@ function addAnswer(game, active, content, hyperlink, project, language, editor, 
     addOptions(`#Editor${id}`, editors, editor);
     addOptions(`#Theme${id}`, themes, theme);
 
-    document.querySelector(`#Game${id}`).value = game;
+    let decodedGame = game;
+    let active = true;
+
+    if(decodedGame.includes(inactiveAnswer)) {
+        active = false;
+        decodedGame = decodedGame.substring(0, decodedGame.indexOf(inactiveAnswer));
+    }
+
+    document.querySelector(`#Game${id}`).value = decodedGame;
     document.querySelector(`#Active${id}`).checked = active;
     document.querySelector(`#Answer${id}`).value = content;
     document.querySelector(`#Link${id}`).value = hyperlink;
@@ -69,11 +138,11 @@ function addAnswer(game, active, content, hyperlink, project, language, editor, 
 function addOptions(selectElementId, options, additionalOption) {
     const element = document.querySelector(selectElementId);
 
-    if(additionalOption !== undefined && !options.includes(additionalOption)) {
+    if (additionalOption !== undefined && !options.includes(additionalOption)) {
         options.push(additionalOption);
     }
 
-    for(let option of options) {
+    for (let option of options) {
         const child = document.createElement("option");
         child.innerHTML = option;
         element.add(child);
@@ -99,8 +168,8 @@ function init() {
             nodecg.log.info(`Message change event. Retrieved ${sortedKeys.length} answers.`);
             for (let game of sortedKeys) {
                 const answer = newValue[game];
-    
-                addAnswer(game, answer.active, answer.content, answer.hyperlink, answer.project, answer.language, answer.editor, answer.theme);
+
+                addAnswer(game, answer.content, answer.hyperlink, answer.project, answer.language, answer.editor, answer.theme);
             }
         });
     });
