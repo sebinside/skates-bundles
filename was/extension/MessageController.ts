@@ -5,6 +5,7 @@ export class MessageController {
     private static readonly defaultMessages: Record<string, Message> = {
         "Science & Technology":
         {
+            active: true,
             content: "Sebastian programmiert einen !was chat bot",
             hyperlink: "702.yt/was",
             project: "nodecg.io",
@@ -13,10 +14,12 @@ export class MessageController {
             theme: "monokai"
         },
         "Watch Dogs: Legion": {
+            active: true,
             content: "Sebastian spielt Uhren-Hunde. Wau wau!",
             hyperlink: "702.yt/was"
         },
         "Minecraft": {
+            active: true,
             content: "Sebastian baut ein neues Minecraft Skyblock Modpack",
             hyperlink: "702.yt/was",
             project: "Skyblock-Nachfolger",
@@ -27,17 +30,17 @@ export class MessageController {
     };
 
     private static readonly defaultValues: PresetCollection = {
-        projects: ["nodecg.io", "PremiereCEP", "Skyblock-Nachfolger", "HotkeylessAHK"],
-        languages: ["typescript", "scala", "java", "zenscript"],
-        editors: ["vscode", "intellij", "eclipse"],
-        themes: ["monokai"]
+        projects: ["", "nodecg.io", "PremiereCEP", "Skyblock-Nachfolger", "HotkeylessAHK"],
+        languages: ["", "typescript", "scala", "java", "zenscript"],
+        editors: ["", "vscode", "intellij", "eclipse"],
+        themes: ["", "monokai"]
     }
 
     private messages: ReplicantServer<Record<string, Message>>;
 
     constructor(private nodecg: NodeCG) {
         this.nodecg.Replicant('was.values', { defaultValue: MessageController.defaultValues })
-        this. messages = this.nodecg.Replicant('was.messages', { defaultValue: MessageController.defaultMessages })
+        this.messages = this.nodecg.Replicant('was.messages', { defaultValue: MessageController.defaultMessages })
     }
 
     public getMessage(game: string): string {
@@ -51,7 +54,7 @@ export class MessageController {
                 return `${message?.content} | Projekt: ${message?.project} | Sprache: ${message?.language} | Editor: ${message?.editor} | Theme: ${message?.theme} | Alle Infos: ${message?.hyperlink}`
             }
         }
-        return ""; 
+        return "";
     }
 
     public hasMessage(game: string): boolean {
