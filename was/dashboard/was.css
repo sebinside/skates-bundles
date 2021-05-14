@@ -83,3 +83,7 @@ textarea {
 #template {
     display: none;
 }
+
+a, a:hover, a:visited {
+    color: gray;
+}

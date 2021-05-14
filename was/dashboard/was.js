@@ -7,8 +7,7 @@ let themes = [""];
 
 const inactiveAnswer = "_INACTIVE_";
 
-// TODO: Add Extended Answer
-// TODO: Add Delete Button + missing number handling in collectAnswers()
+// TODO: Don't display answers when not logged in
 
 document.querySelector("#retrieveCurrentGame").onclick = () => {
     nodecg.sendMessage("retrieveCurrentGame")
@@ -25,7 +24,7 @@ document.querySelector("#retrieveCurrentGame").onclick = () => {
 }
 
 document.querySelector("#addAnswer").onclick = () => {
-    addAnswer("", "", "", "", "", "", "");
+    addAnswer("", "", "", "", "", "", "", "");
 }
 
 document.querySelector("#save").onclick = () => {
@@ -33,6 +32,11 @@ document.querySelector("#save").onclick = () => {
     if (validateAnswers(answers)) {
         saveAnswers(answers);
     }
+}
+
+function remove(id) {
+    const child = document.querySelector(`#Container${id}`);
+    child.parentElement.removeChild(child);
 }
 
 function collectAnswers() {
@@ -43,26 +47,29 @@ function collectAnswers() {
     }
 
     for (let id = 0; id < answerCounter; id++) {
-        let game = document.querySelector(`#Game${id}`).value;
+        if (document.querySelector(`#Container${id}`) !== null) {
+            let game = document.querySelector(`#Game${id}`).value;
 
-        if (!document.querySelector(`#Active${id}`).checked) {
-            game = `${game}${inactiveAnswer}${id}`;
-        }
+            if (!document.querySelector(`#Active${id}`).checked) {
+                game = `${game}${inactiveAnswer}${id}`;
+            }
 
-        const answer = {
-            content: document.querySelector(`#Answer${id}`).value,
-            hyperlink: document.querySelector(`#Link${id}`).value,
-            project: document.querySelector(`#Project${id}`).value,
-            language: document.querySelector(`#Language${id}`).value,
-            editor: document.querySelector(`#Editor${id}`).value,
-            theme: document.querySelector(`#Theme${id}`).value
-        }
+            const answer = {
+                content: document.querySelector(`#Answer${id}`).value,
+                details: document.querySelector(`#Details${id}`).value,
+                hyperlink: document.querySelector(`#Link${id}`).value,
+                project: document.querySelector(`#Project${id}`).value,
+                language: document.querySelector(`#Language${id}`).value,
+                editor: document.querySelector(`#Editor${id}`).value,
+                theme: document.querySelector(`#Theme${id}`).value
+            }
 
-        if (answers[game] !== undefined) {
-            window.alert(`Duplicated game: ${game}`);
-            return {};
-        } else {
-            answers[game] = answer;
+            if (answers[game] !== undefined) {
+                window.alert(`Duplicated game: ${game}`);
+                return {};
+            } else {
+                answers[game] = answer;
+            }
         }
     }
 
@@ -72,7 +79,7 @@ function collectAnswers() {
 function validateAnswers(answers) {
     const keys = Object.keys(answers);
 
-    if(keys.length === 0) {
+    if (keys.length === 0) {
         return false;
     }
 
@@ -100,14 +107,15 @@ function saveAnswers(answers) {
 function resetAnswers() {
     if (answerCounter !== 0) {
         for (let i = 0; i < answerCounter; i++) {
-            const child = document.querySelector(`#Container${i}`);
-            child.parentElement.removeChild(child);
+            if (document.querySelector(`#Container${i}`) !== null) {
+                remove(i);
+            }
         }
         answerCounter = 0;
     }
 }
 
-function addAnswer(game, content, hyperlink, project, language, editor, theme) {
+function addAnswer(game, content, details, hyperlink, project, language, editor, theme) {
     const id = answerCounter++;
     const html = document.querySelector("#template").innerHTML.replaceAll("CID", id);
     document.body.insertAdjacentHTML("beforeend", html);
@@ -120,7 +128,7 @@ function addAnswer(game, content, hyperlink, project, language, editor, theme) {
     let decodedGame = game;
     let active = true;
 
-    if(decodedGame.includes(inactiveAnswer)) {
+    if (decodedGame.includes(inactiveAnswer)) {
         active = false;
         decodedGame = decodedGame.substring(0, decodedGame.indexOf(inactiveAnswer));
     }
@@ -128,6 +136,7 @@ function addAnswer(game, content, hyperlink, project, language, editor, theme) {
     document.querySelector(`#Game${id}`).value = decodedGame;
     document.querySelector(`#Active${id}`).checked = active;
     document.querySelector(`#Answer${id}`).value = content;
+    document.querySelector(`#Details${id}`).value = details;
     document.querySelector(`#Link${id}`).value = hyperlink;
     document.querySelector(`#Project${id}`).value = project;
     document.querySelector(`#Language${id}`).value = language;
@@ -150,6 +159,7 @@ function addOptions(selectElementId, options, additionalOption) {
 }
 
 function init() {
+    // TODO: Check if user is logged in 
     const answers = this.nodecg.Replicant('was.messages');
     const presets = this.nodecg.Replicant('was.values');
 
@@ -169,7 +179,7 @@ function init() {
             for (let game of sortedKeys) {
                 const answer = newValue[game];
 
-                addAnswer(game, answer.content, answer.hyperlink, answer.project, answer.language, answer.editor, answer.theme);
+                addAnswer(game, answer.content, answer.details, answer.hyperlink, answer.project, answer.language, answer.editor, answer.theme);
             }
         });
     });

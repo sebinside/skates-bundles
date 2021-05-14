@@ -7,6 +7,7 @@ export interface PresetCollection {
 
 export interface Message {
     readonly content: string,
+    readonly details: string,
     readonly hyperlink: string,
     readonly project?: string,
     readonly language?: string,

@@ -6,6 +6,7 @@ export class MessageController {
         "Science & Technology":
         {
             content: "Sebastian programmiert einen !was chat bot",
+            details: "Sebastian programmiert einen !was chat bot",
             hyperlink: "702.yt/was",
             project: "nodecg.io",
             language: "typescript",
@@ -14,10 +15,12 @@ export class MessageController {
         },
         "Watch Dogs: Legion": {
             content: "Sebastian spielt Uhren-Hunde. Wau wau!",
+            details: "Sebastian spielt Uhren-Hunde. Wau wau!",
             hyperlink: "702.yt/was"
         },
         "Minecraft": {
             content: "Sebastian baut ein neues Minecraft Skyblock Modpack",
+            details: "Sebastian baut ein neues Minecraft Skyblock Modpack",
             hyperlink: "702.yt/was",
             project: "Skyblock-Nachfolger",
             language: "zenscript",
