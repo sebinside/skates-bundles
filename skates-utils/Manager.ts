@@ -30,6 +30,18 @@ export class Manager {
         }
     }
 
+    protected initReadyListener(definitelyAvailableProvider: ServiceProvider<unknown> | undefined) {
+        this.nodecg.listenFor("isReady", async (_, ack) => {
+            if(ack && !ack.handled) {
+                if(definitelyAvailableProvider && definitelyAvailableProvider.getClient()) {
+                    ack(null, true);
+                } else {
+                    ack(null, false);
+                } 
+            }
+        })
+    }
+
     private testForCompleteness(): void {
         if (this.registeredProviders.every(provider => provider.getClient())) {
             this.nodecg.log.info("All required services are available.");

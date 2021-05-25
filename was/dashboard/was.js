@@ -7,7 +7,14 @@ let themes = [""];
 
 const inactiveAnswer = "_INACTIVE_";
 
-// TODO: Don't display answers when not logged in
+window.setInterval(() => {
+    nodecg.sendMessage("isReady").then(result => {
+        activateAll(result);
+    }).catch(error => {
+        activateAll(false);
+        nodecg.log.error(error);
+    })
+}, 1000); 
 
 document.querySelector("#retrieveCurrentGame").onclick = () => {
     nodecg.sendMessage("retrieveCurrentGame")
@@ -32,6 +39,18 @@ document.querySelector("#save").onclick = () => {
     if (validateAnswers(answers)) {
         saveAnswers(answers);
     }
+}
+
+function activateAll(active) {
+    [...document.getElementsByClassName("container")].forEach(
+        (element, index, array) => {
+            if(active) {
+                element.classList.remove("containerDeactivated");
+            } else {
+                element.classList.add("containerDeactivated");
+            } 
+        }
+    );
 }
 
 function remove(id) {
