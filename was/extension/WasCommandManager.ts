@@ -18,6 +18,7 @@ export class WasCommandManager extends Manager {
         this.register(this.chatClient, "Twitch chat client", () => this.initChat());
         this.register(this.twitchApiClient, "Twitch api client", async () => { this.initApiClient() });
         this.register(this.sqlClient, "SQL client", () => this.initDB());
+        this.initReadyListener(this.chatClient);
     }
 
     public static readonly CHANNEL = "#skate702"

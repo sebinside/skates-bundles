@@ -87,3 +87,8 @@ textarea {
 a, a:hover, a:visited {
     color: gray;
 }
+
+.containerDeactivated {
+  pointer-events: none;
+  opacity: 0.5;
+}
