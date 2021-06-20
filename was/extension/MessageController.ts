@@ -2,27 +2,33 @@ import { NodeCG, ReplicantServer } from "nodecg/types/server";
 import { Message, PresetCollection } from "./types";
 
 export class MessageController {
+
+    static readonly REPLICANT_VALUES: string = 'was.values';
+    static readonly REPLICANT_MESSAGES: string = 'was.messages';
+
     private static readonly defaultMessages: Record<string, Message> = {
         "Science & Technology":
         {
             content: "Sebastian programmiert einen !was chat bot",
-            details: "Sebastian programmiert einen !was chat bot",
+            details: "Sebastian programmiert einen !was chat bot und eine !was website",
             hyperlink: "702.yt/was",
             project: "nodecg.io",
             language: "typescript",
+            technology: "Node.js",
             editor: "vscode",
             theme: "monokai"
         },
         "Watch Dogs: Legion": {
             content: "Sebastian spielt Uhren-Hunde. Wau wau!",
-            details: "Sebastian spielt Uhren-Hunde. Wau wau!",
+            details: "Sebastian spielt Uhren-Hunde. Wau wau wau!",
             hyperlink: "702.yt/was"
         },
         "Minecraft": {
             content: "Sebastian baut ein neues Minecraft Skyblock Modpack",
-            details: "Sebastian baut ein neues Minecraft Skyblock Modpack",
+            details: "Sebastian baut ein neues Minecraft Skyblock Expert Modpack",
             hyperlink: "702.yt/was",
             project: "Skyblock-Nachfolger",
+            technology: "CraftTweaker",
             language: "zenscript",
             editor: "vscode",
             theme: "monokai"
@@ -33,14 +39,15 @@ export class MessageController {
         projects: ["", "nodecg.io", "PremiereCEP", "Skyblock-Nachfolger", "HotkeylessAHK"],
         languages: ["", "typescript", "scala", "java", "zenscript"],
         editors: ["", "vscode", "intellij", "eclipse"],
-        themes: ["", "monokai"]
+        themes: ["", "monokai"],
+        technologies: ["", "CraftTweaker", "Node.js"]
     }
 
     private messages: ReplicantServer<Record<string, Message>>;
 
     constructor(private nodecg: NodeCG) {
-        this.nodecg.Replicant('was.values', { defaultValue: MessageController.defaultValues })
-        this.messages = this.nodecg.Replicant('was.messages', { defaultValue: MessageController.defaultMessages })
+        this.nodecg.Replicant(MessageController.REPLICANT_VALUES, { defaultValue: MessageController.defaultValues })
+        this.messages = this.nodecg.Replicant(MessageController.REPLICANT_MESSAGES, { defaultValue: MessageController.defaultMessages })
     }
 
     public getMessage(game: string): string {

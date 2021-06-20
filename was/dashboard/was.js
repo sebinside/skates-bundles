@@ -4,6 +4,7 @@ let projects = [""];
 let languages = [""];
 let editors = [""];
 let themes = [""];
+let technologies = [""];
 
 const inactiveAnswer = "_INACTIVE_";
 
@@ -24,7 +25,7 @@ document.querySelector("#retrieveCurrentGame").onclick = () => {
 }
 
 document.querySelector("#addAnswer").onclick = () => {
-    addAnswer("", "", "", "", "", "", "", "");
+    addAnswer("", "", "", "", "", "", "", "", "");
 }
 
 document.querySelector("#save").onclick = () => {
@@ -60,6 +61,7 @@ function collectAnswers() {
                 hyperlink: document.querySelector(`#Link${id}`).value,
                 project: document.querySelector(`#Project${id}`).value,
                 language: document.querySelector(`#Language${id}`).value,
+                technology: document.querySelector(`#Technology${id}`).value,
                 editor: document.querySelector(`#Editor${id}`).value,
                 theme: document.querySelector(`#Theme${id}`).value
             }
@@ -115,7 +117,7 @@ function resetAnswers() {
     }
 }
 
-function addAnswer(game, content, details, hyperlink, project, language, editor, theme) {
+function addAnswer(game, content, details, hyperlink, project, language, technology, editor, theme) {
     const id = answerCounter++;
     const html = document.querySelector("#template").innerHTML.replaceAll("CID", id);
     document.body.insertAdjacentHTML("beforeend", html);
@@ -123,6 +125,7 @@ function addAnswer(game, content, details, hyperlink, project, language, editor,
     addOptions(`#Project${id}`, projects, project);
     addOptions(`#Language${id}`, languages, language);
     addOptions(`#Editor${id}`, editors, editor);
+    addOptions(`#Technology${id}`, technologies, technology);
     addOptions(`#Theme${id}`, themes, theme);
 
     let decodedGame = game;
@@ -139,6 +142,7 @@ function addAnswer(game, content, details, hyperlink, project, language, editor,
     document.querySelector(`#Details${id}`).value = details;
     document.querySelector(`#Link${id}`).value = hyperlink;
     document.querySelector(`#Project${id}`).value = project;
+    document.querySelector(`#Technology${id}`).value = technology;
     document.querySelector(`#Language${id}`).value = language;
     document.querySelector(`#Editor${id}`).value = editor;
     document.querySelector(`#Theme${id}`).value = theme;
@@ -169,6 +173,7 @@ function init() {
         languages = newValue.languages;
         editors = newValue.editors;
         themes = newValue.themes;
+        technologies = newValue.technologies;
 
         // Await preset loading before loading the answers
         answers.on('change', (newValue, _) => {
@@ -179,7 +184,7 @@ function init() {
             for (let game of sortedKeys) {
                 const answer = newValue[game];
 
-                addAnswer(game, answer.content, answer.details, answer.hyperlink, answer.project, answer.language, answer.editor, answer.theme);
+                addAnswer(game, answer.content, answer.details, answer.hyperlink, answer.project, answer.language, answer.technology, answer.editor, answer.theme);
             }
         });
     });

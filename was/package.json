@@ -6,7 +6,8 @@
         "compatibleRange": "^1.1.1",
         "bundleDependencies": {
             "nodecg-io-twitch-chat": "^0.2.0",
-            "nodecg-io-twitch-api": "^0.2.0"
+            "nodecg-io-twitch-api": "^0.2.0",
+            "nodecg-io-sql": "^0.2.0"
         },
         "dashboardPanels": [
             {
@@ -35,6 +36,7 @@
         "nodecg-io-core": "^0.2.0",
         "nodecg-io-twitch-chat": "^0.2.0",
         "nodecg-io-twitch-api": "^0.2.0",
+        "nodecg-io-sql": "^0.2.0",
         "skates-utils": "^0.2.0"
     }
 }

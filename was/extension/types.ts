@@ -2,7 +2,8 @@ export interface PresetCollection {
     projects: string[],
     languages: string[],
     editors: string[],
-    themes: string[]
+    themes: string[],
+    technologies: string[]
 }
 
 export interface Message {
@@ -11,6 +12,7 @@ export interface Message {
     readonly hyperlink: string,
     readonly project?: string,
     readonly language?: string,
+    readonly technology?: string,
     readonly editor?: string,
     readonly theme?: string
 }
