@@ -3,37 +3,74 @@ import { Message } from "./types";
 import { SQLCLient } from "nodecg-io-sql";
 import { ServiceProvider } from "nodecg-io-core";
 
- // TODO SH: Setup database
+interface CurrentItem {
+    game: string,
+    details: string,
+    project: string,
+    technology: string,
+    language: string,
+    editor: string,
+    theme: string
+}
+
+// TODO SH: Setup database
 export class DBController {
 
-    private messages: ReplicantServer<Record<string, Message>>;
+    private messageReplicant: ReplicantServer<Record<string, Message>>;
     private currentGame = "";
+    private messages: Record<string, Message> | undefined = undefined;
 
     constructor(messageReplicantId: string, private sql: ServiceProvider<SQLCLient> | undefined, private nodecg: NodeCG) {
-        this.messages = this.nodecg.Replicant(messageReplicantId);
+        this.messageReplicant = this.nodecg.Replicant(messageReplicantId);
     }
 
     startListening(currentGame: string): void {
         this.currentGame = currentGame;
 
-        // TODO SH: Implement replicant listening and sending updates to the DB
-        this.messages.on('change', (newValue: Record<string, Message>, _) => {
-            this.nodecg.log.info(`Updating with keys: ${Object.keys(newValue)}`);
-            this.nodecg.log.info(`Current game: ${currentGame}`);
-
-            this.updateDB();
+        this.messageReplicant.on('change', async (newValue: Record<string, Message>, _) => {
+            this.messages = newValue;
+            this.nodecg.log.info("Received updated message. Updating database...")
+            await this.updateDB();
         });
     }
 
-    setCurrentGameAndUpdate(currentGame: string): void {
-        if(this.currentGame != currentGame) {
+    async setCurrentGameAndUpdate(currentGame: string): Promise<void> {
+        if (this.currentGame != currentGame) {
             this.currentGame = currentGame;
-            this.updateDB();
+            await this.updateDB();
         }
     }
 
-    private updateDB() {
-        // TODO SH: Use this one
-        this.sql?.getClient();
+    private async updateDB() {
+        // Check for validity of inputs
+        if (this.currentGame !== "" && this.messages !== undefined && this.messages[this.currentGame]) {
+
+            const currentMessage = this.messages[this.currentGame];
+
+            const currentItem: CurrentItem = {
+                game: this.currentGame,
+                details: currentMessage.details,
+                project: currentMessage.project || "",
+                technology: currentMessage.technology || "",
+                language: currentMessage.language || "",
+                editor: currentMessage.editor || "",
+                theme: currentMessage.theme || ""
+            }
+
+            try {
+                // With knex, clear the tables content and add only one item
+                const sql = this.sql?.getClient();
+                if (sql) {
+                    await sql("Current").delete();
+                    await sql<CurrentItem>("Current").insert(currentItem);
+                    this.nodecg.log.info("Successfully updated !was database.");
+                }
+            } catch {
+                this.nodecg.log.error("Unable to update !was database.")
+            }
+
+        } else {
+            this.nodecg.log.warn("Invalid input (current game and/or message) for !was database update.");
+        }
     }
 }

@@ -27,8 +27,8 @@ export class MessageController {
             content: "Sebastian baut ein neues Minecraft Skyblock Modpack",
             details: "Sebastian baut ein neues Minecraft Skyblock Expert Modpack",
             hyperlink: "702.yt/was",
-            project: "Skyblock-Nachfolger",
-            technology: "CraftTweaker",
+            project: "CraftBlock",
+            technology: "crafttweaker",
             language: "zenscript",
             editor: "vscode",
             theme: "monokai"
@@ -36,11 +36,11 @@ export class MessageController {
     };
 
     private static readonly defaultValues: PresetCollection = {
-        projects: ["", "nodecg.io", "PremiereCEP", "Skyblock-Nachfolger", "HotkeylessAHK"],
+        projects: ["", "nodecg.io", "PremiereCEP", "CraftBlock", "HotkeylessAHK"],
         languages: ["", "typescript", "scala", "java", "zenscript"],
         editors: ["", "vscode", "intellij", "eclipse"],
-        themes: ["", "monokai"],
-        technologies: ["", "CraftTweaker", "Node.js"]
+        themes: ["", "monokai", "rainbow"],
+        technologies: ["", "crafttweaker", "nodejs"]
     }
 
     private messages: ReplicantServer<Record<string, Message>>;
