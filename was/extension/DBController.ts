@@ -13,7 +13,6 @@ interface CurrentItem {
     theme: string
 }
 
-// TODO SH: Setup database
 export class DBController {
 
     private messageReplicant: ReplicantServer<Record<string, Message>>;
@@ -49,12 +48,12 @@ export class DBController {
 
             const currentItem: CurrentItem = {
                 game: this.currentGame,
-                details: currentMessage.details,
-                project: currentMessage.project || "",
-                technology: currentMessage.technology || "",
-                language: currentMessage.language || "",
-                editor: currentMessage.editor || "",
-                theme: currentMessage.theme || ""
+                details: currentMessage?.details || "",
+                project: currentMessage?.project || "",
+                technology: currentMessage?.technology || "",
+                language: currentMessage?.language || "",
+                editor: currentMessage?.editor || "",
+                theme: currentMessage?.theme || ""
             }
 
             try {

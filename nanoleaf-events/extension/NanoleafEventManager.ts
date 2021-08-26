@@ -138,7 +138,7 @@ export class NanoleafEventManager extends Manager {
     }
 
     private async sendColor(value: number) {
-        await this.nanoleafClient?.getClient()?.setPanelColor(this.panels[Math.floor(Math.random() * this.panels.length)],
+        await this.nanoleafClient?.getClient()?.setPanelColor(this.panels[Math.floor(Math.random() * this.panels.length)] || -1,
             NanoleafUtils.convertHSVtoRGB(
                 { hue: value / 360, saturation: 1, value: 1 }
             )
@@ -170,8 +170,8 @@ export class NanoleafEventManager extends Manager {
         if (event === undefined || event.data.length === 0) {
             return { level: 0, active: false }
         } else {
-            const level = event.data[0].level;
-            const expireDate = new Date(event.data[0].expiryDate);
+            const level = event.data[0]?.level || 0;
+            const expireDate = new Date(event.data[0]?.expiryDate || "1994-02-07T00:00:00");
             const active = expireDate.getTime() - (new Date()).getTime() > 0;
             return { level, active };
         }
@@ -182,7 +182,7 @@ export class NanoleafEventManager extends Manager {
 
         if (data.active) {
             this.nanoleafClient?.getClient()?.getQueue().pauseQueue();
-            if (this.hypeTrainLevel != data.level) {
+            if (this.hypeTrainLevel !== data.level) {
                 this.hypeTrainLevel = data.level;
                 this.nodecg.log.info(`Starting hype train with level ${this.hypeTrainLevel}.`)
                 this.doHypeTrain(this.hypeTrainLevel);

@@ -5,7 +5,9 @@ export class SubEventUtils {
         const array = [...input];
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+            const shuffle = array[i] || -1;
+            array[i] = array[j] || -1;
+            array[j] = shuffle;
         }
         return array;
     }
@@ -25,7 +27,7 @@ export class SubEventUtils {
     ]
 
     static retrieveSubIconColor(months: number): Color {
-        return SubEventUtils.subColors[SubEventUtils.retrieveSubColorIndex(months)];
+        return SubEventUtils.subColors[SubEventUtils.retrieveSubColorIndex(months)] || { red: 0, green: 0, blue: 0};
     }
 
     static isSubMilestone(months: number): boolean {
@@ -45,6 +47,6 @@ export class SubEventUtils {
     }
 
     static retrievePreviousSubIconColor(months: number): Color {
-        return SubEventUtils.subColors[Math.max(SubEventUtils.retrieveSubColorIndex(months) - 1, 0)];
+        return SubEventUtils.subColors[Math.max(SubEventUtils.retrieveSubColorIndex(months) - 1, 0)] || { red: 0, green: 0, blue: 0};
     }
 }
