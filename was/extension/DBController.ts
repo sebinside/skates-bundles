@@ -1,4 +1,4 @@
-import { NodeCG, ReplicantServer } from "nodecg/types/server";
+import { NodeCG, ReplicantServer } from "nodecg-types/types/server";
 import { Message } from "./types";
 import { SQLCLient } from "nodecg-io-sql";
 import { ServiceProvider } from "nodecg-io-core";

@@ -1,6 +1,6 @@
 import { ServiceProvider } from "nodecg-io-core";
 import { TwitchChatServiceClient } from "nodecg-io-twitch-chat";
-import { NodeCG } from "nodecg/types/server";
+import { NodeCG } from "nodecg-types/types/server";
 import { Manager } from "skates-utils";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { MessageController } from "./MessageController";

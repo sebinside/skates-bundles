@@ -3,7 +3,7 @@ import { NanoleafServiceClient } from "nodecg-io-nanoleaf";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { TwitchPubSubServiceClient } from "nodecg-io-twitch-pubsub";
 import { NanoleafUtils } from "nodecg-io-nanoleaf/extension/nanoleafUtils";
-import { NodeCG } from "nodecg/types/server";
+import { NodeCG } from "nodecg-types/types/server";
 import { PubSubRedemptionMessage } from 'twitch-pubsub-client';
 import { SubEventUtils } from "./SubEventUtils";
 import { Manager } from "skates-utils";

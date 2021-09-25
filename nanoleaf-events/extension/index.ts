@@ -1,4 +1,4 @@
-import { NodeCG } from "nodecg/types/server";
+import { NodeCG } from "nodecg-types/types/server";
 import { TwitchPubSubServiceClient } from "nodecg-io-twitch-pubsub";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { NanoleafServiceClient } from "nodecg-io-nanoleaf";
