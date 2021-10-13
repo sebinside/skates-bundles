@@ -1,4 +1,4 @@
-import { NodeCG, ReplicantServer } from "nodecg/types/server";
+import { NodeCG, ReplicantServer } from "nodecg-types/types/server";
 import { Message, PresetCollection } from "./types";
 
 export class MessageController {

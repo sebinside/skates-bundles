@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "node-fetch": "^2.6.1",
-        "nodecg": "^1.8.1",
+        "nodecg-types": "^1.8.1",
         "nodecg-io-core": "^0.2.0",
         "nodecg-io-twitch-api": "^0.2.0",
         "nodecg-io-twitch-pubsub": "^0.2.0",

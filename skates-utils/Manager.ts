@@ -1,5 +1,5 @@
 import { ServiceProvider } from "nodecg-io-core";
-import { NodeCG } from "nodecg/types/server";
+import { NodeCG } from "nodecg-types/types/server";
 
 export class Manager {
 
