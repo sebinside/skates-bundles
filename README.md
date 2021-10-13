@@ -19,8 +19,8 @@ skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https:
 
     ```json
     {
-        "packages": ["nodecg-io-*", "nodecg-io-core/dashboard", "samples/*", "skates-bundles/*"],
-        "version": "0.1.0"
+        "packages": ["nodecg-io-*", "nodecg-io-core/dashboard", "samples/*", "utils/*", "skates-bundles/*"],
+        "version": "0.2.0"
     }
     ```
 
