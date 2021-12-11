@@ -7,7 +7,14 @@
         "bundleDependencies": {
             "nodecg-io-streamelements": "^0.2.0",
             "nodecg-io-spotify": "^0.2.0"
-        }
+        },
+        "graphics": [
+            {
+                "file": "streambar.html",
+                "width": 360,
+                "height": 48
+            }
+        ]
     },
     "scripts": {
         "build": "tsc -b",

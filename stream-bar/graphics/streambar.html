@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		#message {
+			font-size: 10em;
+		}
+	</style>
+</head>
+<body>
+	<div id="message"></div>
+</body>
+
+<script>
+	const testReplicant = nodecg.Replicant('testValue',);
+
+	testReplicant.on('change', (newValue, oldValue) => {
+		message.innerText = `Song: ${newValue}!`;
+	});
+</script>
+</html>

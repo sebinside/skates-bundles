@@ -16,6 +16,8 @@ export class StreamBarManager extends Manager {
         this.register(this.streamelementsClient, "StreamelementsClient", () => this.initStreamelementsClient());
     }
 
+    private readonly testReplicant = this.nodecg.Replicant('testValue'); 
+
     initStreamelementsClient(): void {
         this.streamelementsClient?.getClient()?.onSubscriber(subInfo => this.nodecg.log.info(subInfo.data.displayName));
     }
@@ -27,6 +29,7 @@ export class StreamBarManager extends Manager {
             const currentSong = currentTrack.body.item as SpotifyApi.TrackObjectFull;
             const artistName = currentSong.artists[0]?.name;
             this.nodecg.log.info(`TRACK INFO: ${songName} by ${artistName}`);
+            this.testReplicant.value = songName;
         } else {
             this.nodecg.log.info("Currently no track playing!")
         }
