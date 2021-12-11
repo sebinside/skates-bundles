@@ -5,7 +5,7 @@ import { WasCommandManager } from "./WasCommandManager";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { SQLClient } from "nodecg-io-sql";
 
-module.exports = function (nodecg: NodeCG) {   
+module.exports = function (nodecg: NodeCG) {
     const chatClient = requireService<TwitchChatServiceClient>(nodecg, "twitch-chat");
 
     // Required scopes: none

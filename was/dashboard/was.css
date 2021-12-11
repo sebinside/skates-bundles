@@ -73,7 +73,7 @@ textarea {
 }
 
 .containerHead > input[type="text"] {
-    margin-left:33px;
+    margin-left: 33px;
 }
 
 textarea {
@@ -84,11 +84,13 @@ textarea {
     display: none;
 }
 
-a, a:hover, a:visited {
+a,
+a:hover,
+a:visited {
     color: gray;
 }
 
 .containerDeactivated {
-  pointer-events: none;
-  opacity: 0.5;
+    pointer-events: none;
+    opacity: 0.5;
 }

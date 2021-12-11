@@ -12,19 +12,21 @@ export class WasCommandManager extends Manager {
         private chatClient: ServiceProvider<TwitchChatServiceClient> | undefined,
         private twitchApiClient: ServiceProvider<TwitchApiServiceClient> | undefined,
         private sqlClient: ServiceProvider<SQLClient> | undefined,
-        protected nodecg: NodeCG
+        protected nodecg: NodeCG,
     ) {
         super("!was Command", nodecg);
         this.register(this.chatClient, "Twitch chat client", () => this.initChat());
-        this.register(this.twitchApiClient, "Twitch api client", async () => { this.initApiClient() });
+        this.register(this.twitchApiClient, "Twitch api client", async () => {
+            this.initApiClient();
+        });
         this.register(this.sqlClient, "SQL client", () => this.initDB());
         this.initReadyListener(this.chatClient);
     }
 
-    public static readonly CHANNEL = "#skate702"
-    public static readonly COMMAND = /^!was(\s.*|$)/
-    public static readonly TIMEOUT_IN_SECONDS = 10
-    public static readonly DB_REFRESH_INTERVAL = 10
+    public static readonly CHANNEL = "#skate702";
+    public static readonly COMMAND = /^!was(\s.*|$)/;
+    public static readonly TIMEOUT_IN_SECONDS = 10;
+    public static readonly DB_REFRESH_INTERVAL = 10;
 
     private lastMessage = Date.now();
 
@@ -37,26 +39,27 @@ export class WasCommandManager extends Manager {
     async initApiClient(): Promise<void> {
         this.nodecg.listenFor("retrieveCurrentGame", async (_, ack) => {
             if (ack && !ack.handled) {
-                const game = await this.retrieveCurrentGame() || "";
+                const game = (await this.retrieveCurrentGame()) || "";
                 ack(null, game);
             }
-        })
+        });
     }
 
     async initDB(): Promise<void> {
         const dbController = new DBController(MessageController.REPLICANT_MESSAGES, this.sqlClient, this.nodecg);
 
-        const game = await this.retrieveCurrentGame() || "";
+        const game = (await this.retrieveCurrentGame()) || "";
         dbController.startListening(game);
 
         setInterval(async () => {
-            const game = await this.retrieveCurrentGame() || "";
+            const game = (await this.retrieveCurrentGame()) || "";
             dbController.setCurrentGameAndUpdate(game);
         }, WasCommandManager.DB_REFRESH_INTERVAL * 1000);
     }
 
     private addListener(channel: string) {
-        this.chatClient?.getClient()
+        this.chatClient
+            ?.getClient()
             ?.join(channel)
             .then(() => {
                 this.nodecg.log.info(`Connected !was-manager to twitch channel "${channel}"`);
@@ -76,10 +79,12 @@ export class WasCommandManager extends Manager {
         if (Date.now() - this.lastMessage > WasCommandManager.TIMEOUT_IN_SECONDS * 1000) {
             this.lastMessage = Date.now();
 
-            const game = await this.retrieveCurrentGame() || "";
+            const game = (await this.retrieveCurrentGame()) || "";
 
             if (this.messageController.hasMessage(game)) {
-                this.chatClient?.getClient()?.say(WasCommandManager.CHANNEL, this.messageController.getMessage(game)?.toString() || "");
+                this.chatClient
+                    ?.getClient()
+                    ?.say(WasCommandManager.CHANNEL, this.messageController.getMessage(game)?.toString() || "");
             } else {
                 this.nodecg.log.info(`Unable to find !was output for game: ${game}`);
             }

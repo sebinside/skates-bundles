@@ -4,31 +4,34 @@ import { SQLClient } from "nodecg-io-sql";
 import { ServiceProvider } from "nodecg-io-core";
 
 interface CurrentItem {
-    game: string,
-    details: string,
-    project: string,
-    technology: string,
-    language: string,
-    editor: string,
-    theme: string
+    game: string;
+    details: string;
+    project: string;
+    technology: string;
+    language: string;
+    editor: string;
+    theme: string;
 }
 
 export class DBController {
-
     private messageReplicant: ReplicantServer<Record<string, Message>>;
     private currentGame = "";
     private messages: Record<string, Message> | undefined = undefined;
 
-    constructor(messageReplicantId: string, private sql: ServiceProvider<SQLClient> | undefined, private nodecg: NodeCG) {
+    constructor(
+        messageReplicantId: string,
+        private sql: ServiceProvider<SQLClient> | undefined,
+        private nodecg: NodeCG,
+    ) {
         this.messageReplicant = this.nodecg.Replicant(messageReplicantId);
     }
 
     startListening(currentGame: string): void {
         this.currentGame = currentGame;
 
-        this.messageReplicant.on('change', async (newValue: Record<string, Message>, _) => {
+        this.messageReplicant.on("change", async (newValue: Record<string, Message>, _) => {
             this.messages = newValue;
-            this.nodecg.log.info("Received updated message. Updating database...")
+            this.nodecg.log.info("Received updated message. Updating database...");
             await this.updateDB();
         });
     }
@@ -43,7 +46,6 @@ export class DBController {
     private async updateDB() {
         // Check for validity of inputs
         if (this.currentGame !== "" && this.messages !== undefined && this.messages[this.currentGame]) {
-
             const currentMessage = this.messages[this.currentGame];
 
             const currentItem: CurrentItem = {
@@ -53,8 +55,8 @@ export class DBController {
                 technology: currentMessage?.technology || "",
                 language: currentMessage?.language || "",
                 editor: currentMessage?.editor || "",
-                theme: currentMessage?.theme || ""
-            }
+                theme: currentMessage?.theme || "",
+            };
 
             try {
                 // With knex, clear the tables content and add only one item
@@ -65,9 +67,8 @@ export class DBController {
                     this.nodecg.log.info("Successfully updated !was database.");
                 }
             } catch {
-                this.nodecg.log.error("Unable to update !was database.")
+                this.nodecg.log.error("Unable to update !was database.");
             }
-
         } else {
             this.nodecg.log.warn("Invalid input (current game and/or message) for !was database update.");
         }
