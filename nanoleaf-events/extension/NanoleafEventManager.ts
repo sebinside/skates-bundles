@@ -4,7 +4,7 @@ import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { TwitchPubSubServiceClient } from "nodecg-io-twitch-pubsub";
 import { NanoleafUtils } from "nodecg-io-nanoleaf/extension/nanoleafUtils";
 import { NodeCG } from "nodecg-types/types/server";
-import { PubSubRedemptionMessage } from 'twitch-pubsub-client';
+import { PubSubRedemptionMessage } from '@twurple/pubsub';
 import { SubEventUtils } from "./SubEventUtils";
 import { Manager } from "skates-utils";
 
@@ -51,8 +51,8 @@ export class NanoleafEventManager extends Manager {
         });
 
         this.pubsubClient?.getClient()?.onRedemption((message) => {
-            this.nodecg.log.info(`${message.userDisplayName} redeemed ${message.rewardName}`);
-            this.redemptions.find((value) => value.name === message.rewardName)?.redeem(message);
+            this.nodecg.log.info(`${message.userDisplayName} redeemed ${message.rewardTitle}`);
+            this.redemptions.find((value) => value.name === message.rewardTitle)?.redeem(message);
         });
     }
 

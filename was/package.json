@@ -19,11 +19,6 @@
             }
         ]
     },
-    "scripts": {
-        "build": "tsc -b",
-        "watch": "tsc -b -w",
-        "clean": "tsc -b --clean"
-    },
     "license": "MIT",
     "devDependencies": {
         "@types/node": "^14.14.33",

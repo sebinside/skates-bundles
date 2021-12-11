@@ -1,6 +1,6 @@
 import { NodeCG, ReplicantServer } from "nodecg-types/types/server";
 import { Message } from "./types";
-import { SQLCLient } from "nodecg-io-sql";
+import { SQLClient } from "nodecg-io-sql";
 import { ServiceProvider } from "nodecg-io-core";
 
 interface CurrentItem {
@@ -19,7 +19,7 @@ export class DBController {
     private currentGame = "";
     private messages: Record<string, Message> | undefined = undefined;
 
-    constructor(messageReplicantId: string, private sql: ServiceProvider<SQLCLient> | undefined, private nodecg: NodeCG) {
+    constructor(messageReplicantId: string, private sql: ServiceProvider<SQLClient> | undefined, private nodecg: NodeCG) {
         this.messageReplicant = this.nodecg.Replicant(messageReplicantId);
     }
 

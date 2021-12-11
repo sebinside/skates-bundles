@@ -4,14 +4,14 @@ import { NodeCG } from "nodecg-types/types/server";
 import { Manager } from "skates-utils";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { MessageController } from "./MessageController";
-import { SQLCLient } from "nodecg-io-sql";
+import { SQLClient } from "nodecg-io-sql";
 import { DBController } from "./DBController";
 
 export class WasCommandManager extends Manager {
     constructor(
         private chatClient: ServiceProvider<TwitchChatServiceClient> | undefined,
         private twitchApiClient: ServiceProvider<TwitchApiServiceClient> | undefined,
-        private sqlClient: ServiceProvider<SQLCLient> | undefined,
+        private sqlClient: ServiceProvider<SQLClient> | undefined,
         protected nodecg: NodeCG
     ) {
         super("!was Command", nodecg);
