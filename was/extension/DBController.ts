@@ -34,7 +34,7 @@ export class DBController {
     }
 
     async setCurrentGameAndUpdate(currentGame: string): Promise<void> {
-        if (this.currentGame != currentGame) {
+        if (this.currentGame !== currentGame) {
             this.currentGame = currentGame;
             await this.updateDB();
         }
