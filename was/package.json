@@ -1,13 +1,13 @@
 {
     "name": "was",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "private": true,
     "nodecg": {
         "compatibleRange": "^1.1.1",
         "bundleDependencies": {
-            "nodecg-io-twitch-chat": "^0.2.0",
-            "nodecg-io-twitch-api": "^0.2.0",
-            "nodecg-io-sql": "^0.2.0"
+            "nodecg-io-twitch-chat": "^0.3.0",
+            "nodecg-io-twitch-api": "^0.3.0",
+            "nodecg-io-sql": "^0.3.0"
         },
         "dashboardPanels": [
             {
@@ -28,10 +28,10 @@
     "dependencies": {
         "node-fetch": "^2.6.1",
         "nodecg-types": "^1.8.1",
-        "nodecg-io-core": "^0.2.0",
-        "nodecg-io-twitch-chat": "^0.2.0",
-        "nodecg-io-twitch-api": "^0.2.0",
-        "nodecg-io-sql": "^0.2.0",
-        "skates-utils": "^0.2.0"
+        "nodecg-io-core": "^0.3.0",
+        "nodecg-io-twitch-chat": "^0.3.0",
+        "nodecg-io-twitch-api": "^0.3.0",
+        "nodecg-io-sql": "^0.3.0",
+        "skates-utils": "^0.3.0"
     }
 }

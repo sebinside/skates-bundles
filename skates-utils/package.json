@@ -1,6 +1,6 @@
 {
     "name": "skates-utils",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "private": true,
     "description": "Utility package used in all skates-bundles.",
     "nodecg": {
@@ -13,6 +13,6 @@
     },
     "dependencies": {
         "nodecg-types": "^1.8.1",
-        "nodecg-io-core": "^0.2.0"
+        "nodecg-io-core": "^0.3.0"
     }
 }

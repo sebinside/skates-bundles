@@ -4,7 +4,7 @@ skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https:
 
 ## Very basic installation guide
 
-1. Make sure that you have [NodeCG](https://nodecg.dev) and [nodecg-io](https://nodecg.io) **production version 0.2** already installed.
+1. Make sure that you have [NodeCG](https://nodecg.dev) and [nodecg-io](https://nodecg.io) **development version 0.3** already installed.
 
 2. Clone this repo into the nodecg-io installation directory
 

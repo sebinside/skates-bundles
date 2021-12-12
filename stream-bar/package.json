@@ -1,12 +1,12 @@
 {
     "name": "stream-bar",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "private": true,
     "nodecg": {
         "compatibleRange": "^1.1.1",
         "bundleDependencies": {
-            "nodecg-io-streamelements": "^0.2.0",
-            "nodecg-io-spotify": "^0.2.0"
+            "nodecg-io-streamelements": "^0.3.0",
+            "nodecg-io-spotify": "^0.3.0"
         },
         "graphics": [
             {
@@ -20,11 +20,11 @@
     "dependencies": {
         "@types/node": "^15.0.2",
         "nodecg": "^1.8.1",
-        "nodecg-io-core": "^0.2.0",
-        "nodecg-io-template": "^0.2.0",
+        "nodecg-io-core": "^0.3.0",
+        "nodecg-io-template": "^0.3.0",
         "typescript": "^4.2.4",
-        "nodecg-io-streamelements": "^0.2.0",
-        "nodecg-io-spotify": "^0.2.0",
-        "skates-utils": "^0.2.0"
+        "nodecg-io-streamelements": "^0.3.0",
+        "nodecg-io-spotify": "^0.3.0",
+        "skates-utils": "^0.3.0"
     }
 }
