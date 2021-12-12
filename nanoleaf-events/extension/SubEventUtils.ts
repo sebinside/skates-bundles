@@ -23,11 +23,11 @@ export class SubEventUtils {
         { red: 56, green: 56, blue: 56 },
         { red: 247, green: 247, blue: 247 },
         { red: 255, green: 98, blue: 0 },
-        { red: 0, green: 238, blue: 255 }
-    ]
+        { red: 0, green: 238, blue: 255 },
+    ];
 
     static retrieveSubIconColor(months: number): Color {
-        return SubEventUtils.subColors[SubEventUtils.retrieveSubColorIndex(months)] || { red: 0, green: 0, blue: 0};
+        return SubEventUtils.subColors[SubEventUtils.retrieveSubColorIndex(months)] || { red: 0, green: 0, blue: 0 };
     }
 
     static isSubMilestone(months: number): boolean {
@@ -47,6 +47,12 @@ export class SubEventUtils {
     }
 
     static retrievePreviousSubIconColor(months: number): Color {
-        return SubEventUtils.subColors[Math.max(SubEventUtils.retrieveSubColorIndex(months) - 1, 0)] || { red: 0, green: 0, blue: 0};
+        return (
+            SubEventUtils.subColors[Math.max(SubEventUtils.retrieveSubColorIndex(months) - 1, 0)] || {
+                red: 0,
+                green: 0,
+                blue: 0,
+            }
+        );
     }
 }

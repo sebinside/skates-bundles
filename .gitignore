@@ -1,5 +1,23 @@
-*/node_modules
+# node dependencies
+node_modules/
+
+# compiled js files
 *.js
+
+# generated mapping files
 *.js.map
-*.env
+
+# generated type definitions
 *.d.ts
+
+# generated source mapping files
+*.d.ts.map
+
+# generated build info
+*.tsbuildinfo
+
+# env files
+*.env
+
+# root tsconfig.json file (will be created by the nodecg-io build system)
+/tsconfig.json

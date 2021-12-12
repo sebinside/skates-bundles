@@ -2,13 +2,11 @@ import { NodeCG, ReplicantServer } from "nodecg-types/types/server";
 import { Message, PresetCollection } from "./types";
 
 export class MessageController {
-
-    static readonly REPLICANT_VALUES: string = 'was.values';
-    static readonly REPLICANT_MESSAGES: string = 'was.messages';
+    static readonly REPLICANT_VALUES: string = "was.values";
+    static readonly REPLICANT_MESSAGES: string = "was.messages";
 
     private static readonly defaultMessages: Record<string, Message> = {
-        "Science & Technology":
-        {
+        "Science & Technology": {
             content: "Sebastian programmiert einen !was chat bot",
             details: "Sebastian programmiert einen !was chat bot und eine !was website",
             hyperlink: "702.yt/was",
@@ -16,14 +14,14 @@ export class MessageController {
             language: "typescript",
             technology: "Node.js",
             editor: "vscode",
-            theme: "monokai"
+            theme: "monokai",
         },
         "Watch Dogs: Legion": {
             content: "Sebastian spielt Uhren-Hunde. Wau wau!",
             details: "Sebastian spielt Uhren-Hunde. Wau wau wau!",
-            hyperlink: "702.yt/was"
+            hyperlink: "702.yt/was",
         },
-        "Minecraft": {
+        Minecraft: {
             content: "Sebastian baut ein neues Minecraft Skyblock Modpack",
             details: "Sebastian baut ein neues Minecraft Skyblock Expert Modpack",
             hyperlink: "702.yt/was",
@@ -31,8 +29,8 @@ export class MessageController {
             technology: "crafttweaker",
             language: "zenscript",
             editor: "vscode",
-            theme: "monokai"
-        }
+            theme: "monokai",
+        },
     };
 
     private static readonly defaultValues: PresetCollection = {
@@ -40,14 +38,16 @@ export class MessageController {
         languages: ["", "typescript", "scala", "java", "zenscript"],
         editors: ["", "vscode", "intellij", "eclipse"],
         themes: ["", "monokai", "rainbow"],
-        technologies: ["", "crafttweaker", "nodejs"]
-    }
+        technologies: ["", "crafttweaker", "nodejs"],
+    };
 
     private messages: ReplicantServer<Record<string, Message>>;
 
     constructor(private nodecg: NodeCG) {
-        this.nodecg.Replicant(MessageController.REPLICANT_VALUES, { defaultValue: MessageController.defaultValues })
-        this.messages = this.nodecg.Replicant(MessageController.REPLICANT_MESSAGES, { defaultValue: MessageController.defaultMessages })
+        this.nodecg.Replicant(MessageController.REPLICANT_VALUES, { defaultValue: MessageController.defaultValues });
+        this.messages = this.nodecg.Replicant(MessageController.REPLICANT_MESSAGES, {
+            defaultValue: MessageController.defaultMessages,
+        });
     }
 
     public getMessage(game: string): string {
@@ -58,7 +58,7 @@ export class MessageController {
             if (this.isGamingMessage(message)) {
                 return `${message?.content} | Alle Infos: ${message?.hyperlink}`;
             } else {
-                return `${message?.content} | Projekt: ${message?.project} | Sprache: ${message?.language} | Editor: ${message?.editor} | Theme: ${message?.theme} | Alle Infos: ${message?.hyperlink}`
+                return `${message?.content} | Projekt: ${message?.project} | Sprache: ${message?.language} | Editor: ${message?.editor} | Theme: ${message?.theme} | Alle Infos: ${message?.hyperlink}`;
             }
         }
         return "";
@@ -70,6 +70,6 @@ export class MessageController {
 
     // Convention (because of the lack of OOP): empty project == gaming message
     private isGamingMessage(message: Message | undefined): boolean | undefined {
-        return message?.project === undefined || message.project === ""
+        return message?.project === undefined || message.project === "";
     }
 }
