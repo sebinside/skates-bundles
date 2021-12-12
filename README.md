@@ -48,6 +48,7 @@ skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https:
     ~         "paths": [
     ~             "/absolute/path/to/nodecg/nodecg-io",
     ~             "/absolute/path/to/nodecg/nodecg-io/services",
+    -             "/absolute/path/to/nodecg/nodecg-io/samples"
     +             "/absolute/path/to/nodecg/nodecg-io/samples",
     +             "/absolute/path/to/nodecg/nodecg-io/skates-bundles"
     ~         ]
