@@ -27,7 +27,8 @@ skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https:
     ~        "nodecg-io-core/dashboard",
     ~        "services/*",
     ~        "samples/*",
-    ~        "utils/*",
+    -        "utils/*"
+    +        "utils/*",
     +        "skates-bundles/*"
     ~    ]
     ~ }
@@ -63,6 +64,7 @@ skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https:
     ```diff
     ~ import * as fs from "fs";
     ~
+    - const DIRS = ["./samples", "./services", "./utils"];
     + const DIRS = ["./samples", "./services", "./utils", "./skates-bundles"];
     ~
     ...
@@ -79,6 +81,7 @@ skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https:
     ~         },
     ~         {
     ~             "path": "./utils"
+    -         }
     +         },
     +         {
     +             "path": "./skates-bundles"
