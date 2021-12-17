@@ -6,7 +6,8 @@
         "compatibleRange": "^1.1.1",
         "bundleDependencies": {
             "nodecg-io-streamelements": "^0.3.0",
-            "nodecg-io-spotify": "^0.3.0"
+            "nodecg-io-spotify": "^0.3.0",
+            "nodecg-io-twitch-chat": "^0.3.0"
         },
         "graphics": [
             {
@@ -26,6 +27,7 @@
         "nodecg-io-core": "^0.3.0",
         "nodecg-io-streamelements": "^0.3.0",
         "nodecg-io-spotify": "^0.3.0",
+        "nodecg-io-twitch-chat": "^0.3.0",
         "skates-utils": "^0.3.0"
     }
 }
