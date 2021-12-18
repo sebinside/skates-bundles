@@ -41,16 +41,16 @@ export class StreamBarManager extends Manager {
     }
 
 	async initTwitchClient(): Promise<void> {
-		await this.twitchClient?.getClient()?.join("#skate702");
-		this.twitchClient?.getClient()?.onMessage(async (channel, _, message) => {
+		await this.twitchClient?.getClient()?.join("skate702");
+		this.twitchClient?.getClient()?.onMessage(async (channel, message, msg) => {
 			if (message.toLowerCase().startsWith("!song")) {
 				if (message.split(" ").length === 2) {
 					const target = message.split(" ")[1];
 					await this.retrieveCurrentSong();
-				this.twitchClient?.getClient()?.say(channel, `@${target} Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`);
+					this.twitchClient?.getClient()?.say(channel, `${target} Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`, {replyTo: msg});
 				} else {
 					await this.retrieveCurrentSong();
-					this.twitchClient?.getClient()?.say(channel, `Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`);
+					this.twitchClient?.getClient()?.say(channel, `Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`, {replyTo: msg});
 				}
 
 			}
