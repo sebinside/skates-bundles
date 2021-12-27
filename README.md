@@ -9,7 +9,7 @@ All bundles rely on the [nodecg-io](https://nodecg.io) project.
 
 * [nanoleaf-events](/nanoleaf-events) triggers Nanoleaf Shapes based on live events like channel points, subs, and hype trains
 * [stream-bar](/stream-bar) shows stream meta information like current song playing and last sub in a bar visible in the stream
-* [was](/was) is a chat bot and [website](https://was.skate702.de), answering what the streamer currently does based on the stream info
+* [was](/was) provides a chat bot and [website](https://was.skate702.de) communication, answering what the streamer currently does based on the stream info
 * [skate-utils](/skate-utils) provides common functionality used by the other bundles
 
 
