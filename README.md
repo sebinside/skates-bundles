@@ -4,6 +4,7 @@ This repository contains [NodeCG](https://nodecg.dev) bundles, that are used in 
 This includes live chat interacation and remote control capabilities, e.g., triggering smart lights by channel points.
 All bundles rely on the [nodecg-io](https://nodecg.io) project.
 
+
 ## Bundle Overview
 
 * [nanoleaf-events](/nanoleaf-events) triggers Nanoleaf Shapes based on live events like channel points, subs, and hype trains
@@ -118,4 +119,4 @@ All bundles rely on the [nodecg-io](https://nodecg.io) project.
     
 ## Bundle-specific Requirements and Usage
 
-**TODO**
+For bundle-spcific requirements, custom installation hints, and notes on the usage, please refer to the bundle folders' *README* files.
