@@ -1,8 +1,15 @@
-# skates-bundles
+# skate's Bundles
 
-skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https://skate702.tv)!
+This repository contains [NodeCG](https://nodecg.dev) bundles, that are used in [twitch livestream](https://skate702.tv).
+This includes live chat interacation and remote control capabilities, e.g., triggering smart lights by channel points.
+All bundles heavily rely on the [nodecg-io](https://nodecg.io) project.
 
-## Very basic installation guide
+## Bundle Overview
+
+**TODO**
+
+
+## Installation
 
 1. Make sure that you have [NodeCG](https://nodecg.dev) and [nodecg-io](https://nodecg.io) **development version 0.3** already installed.
 
@@ -105,3 +112,7 @@ skate702's custom nodecg-io bundles live from the stream at [skate702.tv](https:
 7. Start NodeCG
 
     It should display all nodecg-io related bundles and all bundles that are in the skates-samples repository. If not, make sure that you got your configuration files from step 3 through 5 right.
+    
+## Bundle-specific Requirements and Usage
+
+**TODO**
