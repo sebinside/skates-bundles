@@ -119,4 +119,4 @@ All bundles rely on the [nodecg-io](https://nodecg.io) project.
     
 ## Bundle-specific Requirements and Usage
 
-For bundle-spcific requirements, custom installation hints, and notes on the usage, please refer to the bundle folders' *README* files.
+For bundle-specific requirements, custom installation hints, and notes on the usage, please refer to the bundle folders' *README* files.
