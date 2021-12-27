@@ -2,7 +2,7 @@
 
 This repository contains [NodeCG](https://nodecg.dev) bundles, that are used in [twitch livestream](https://skate702.tv).
 This includes live chat interacation and remote control capabilities, e.g., triggering smart lights by channel points.
-All bundles heavily rely on the [nodecg-io](https://nodecg.io) project.
+All bundles rely on the [nodecg-io](https://nodecg.io) project.
 
 ## Bundle Overview
 
