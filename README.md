@@ -67,42 +67,7 @@ All bundles rely on the [nodecg-io](https://nodecg.io) project.
     ~ }
     ```
 
-5. Add skates-bundles to build script and tsconfig.json
-
-    The build script in `nodecg-io/.scripts/update-paths.mjs` updates all the typescript paths, so the typescript compiler knows where to look for bundles.
-
-    **File:** `nodecg/nodecg-io/.scripts/update-paths.mjs`
-
-    ```diff
-    ~ import * as fs from "fs";
-    ~
-    - const DIRS = ["./samples", "./services", "./utils"];
-    + const DIRS = ["./samples", "./services", "./utils", "./skates-bundles"];
-    ~
-    ...
-    ```
-
-    Also, you will have to add skates-bundles to nodecg-io's tsconfig.json:
-
-    **File:** `nodecg/nodecg-io/tsconfig.json`
-
-    ```diff
-    ~
-    ~         {
-    ~             "path": "./samples"
-    ~         },
-    ~         {
-    ~             "path": "./utils"
-    -         }
-    +         },
-    +         {
-    +             "path": "./skates-bundles"
-    +         }
-    ~     ]
-    ~ }
-    ```
-
-6. Install and compile
+5. Install and compile
 
     Install all dependencies of all bundles in this repository, link all nodecg-io components and compile TypeScript using these commands:
 
@@ -113,7 +78,7 @@ All bundles rely on the [nodecg-io](https://nodecg.io) project.
 
     Note that this is run in the nodecg-io directory and not in the skates-bundles directory.
 
-7. Start NodeCG
+6. Start NodeCG
 
     It should display all nodecg-io related bundles and all bundles that are in the skates-samples repository. If not, make sure that you got your configuration files from step 3 through 5 right.
     
