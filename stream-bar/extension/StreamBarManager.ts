@@ -37,24 +37,26 @@ export class StreamBarManager extends Manager {
         this.register(this.spotifyClient, "SpotifyClient", () => this.initSpotifyClient());
         this.register(this.streamelementsClient, "StreamelementsClient", () => this.initStreamelementsClient());
 		this.register(this.twitchClient, "TwitchClient", () => this.initTwitchClient());
-        // TODO: Write frontend
     }
 
 	async initTwitchClient(): Promise<void> {
-		await this.twitchClient?.getClient()?.join("skate702");
-		this.twitchClient?.getClient()?.onMessage(async (channel, message, msg) => {
-			if (message.toLowerCase().startsWith("!song")) {
-				if (message.split(" ").length === 2) {
-					const target = message.split(" ")[1];
-					await this.retrieveCurrentSong();
-					this.twitchClient?.getClient()?.say(channel, `${target} Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`, {replyTo: msg});
-				} else {
-					await this.retrieveCurrentSong();
-					this.twitchClient?.getClient()?.say(channel, `Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`, {replyTo: msg});
-				}
 
-			}
-		});
+        const channel = "#skate702";
+
+		this.twitchClient?.getClient()?.join(channel)
+        .then(() => {
+            this.nodecg.log.info(`Connected stream-bar bot to twitch channel "${channel}"`);
+
+            this.twitchClient?.getClient()?.onMessage(async (chan, user, message, _) => {
+                if (chan === channel.toLowerCase() && message.match("!song")) {
+                        await this.retrieveCurrentSong();
+                        this.twitchClient?.getClient()?.say(channel, `Der aktuelle Song ist "${this.streamBarInfo.value.songName}" von ${this.streamBarInfo.value.artistName}`, {replyTo: user});
+                }
+            });
+        })
+        .catch((reason) => {
+            this.nodecg.log.error(`Couldn't connect to twitch: ${reason}.`);
+        });
 	}
 
     initStreamelementsClient(): void {

@@ -1,0 +1,71 @@
+.fa-user-friends {
+    color: #4fbfeb;
+}
+
+.fa-music {
+    color: #ffe424;
+}
+
+.fa-heart {
+    color: #EB6662;
+}
+
+.fa-glass-cheers {
+    color: #C499FF;
+}
+
+.fa-gift {
+    color: #82f3ff;
+}
+
+.fa-money-bill-wave {
+    color: #6cff55;
+}
+
+.fa-tshirt {
+    color: #ff9d3a;
+}
+
+#bar {
+    height: 47px;
+    width: 370px;
+    margin: 50px;
+    /*background-color: #222;
+    background-image: url("bg.png");
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: left top;*/
+    font-family: "DIN 1451 Com Engschrift", sans-serif;
+    float: left;
+    /*border: 2px solid gray;
+    box-shadow: 3px 4px 9px -2px rgba(0, 0, 0, 0.5);*/
+}
+
+#symbol {
+    display:inline-block;
+    height: 47px;
+    width: 50px;
+    padding-left: 5px;
+    padding-right: 3px;
+    font-size: 28pt;
+    padding-top:2px;
+    position: absolute;
+}
+
+#content {
+    display:inline-block;
+    width: 300px;
+    font-size: 30pt;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+    position: absolute;
+    padding-left:60px;
+}
+
+body {
+    color: #EEE;
+}
