@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "nodecg-types": "^1.8.1",
-        "nodecg-io-core": "^0.3.0"
+        "nodecg-io-core": "^0.3.0",
+        "nodecg-io-tsconfig": "^1.0.0"
     }
 }

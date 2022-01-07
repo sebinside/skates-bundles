@@ -21,6 +21,7 @@
         "node-fetch": "^2.6.1",
         "nodecg-types": "^1.8.1",
         "nodecg-io-core": "^0.3.0",
+        "nodecg-io-tsconfig": "^1.0.0",
         "nodecg-io-twitch-api": "^0.3.0",
         "nodecg-io-twitch-pubsub": "^0.3.0",
         "nodecg-io-nanoleaf": "^0.3.0",
