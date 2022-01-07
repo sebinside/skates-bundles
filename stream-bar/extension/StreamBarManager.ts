@@ -2,6 +2,7 @@
 import { Manager } from "skates-utils";
 import { SpotifyServiceClient } from "nodecg-io-spotify";
 import { StreamElementsServiceClient } from "nodecg-io-streamelements";
+import { TwitchChatServiceClient } from "nodecg-io-twitch-chat";
 import { ServiceProvider } from "nodecg-io-core";
 import { NodeCG, ReplicantServer } from "nodecg-types/types/server";
 
@@ -24,6 +25,7 @@ export class StreamBarManager extends Manager {
     constructor(
         private spotifyClient: ServiceProvider<SpotifyServiceClient> | undefined,
         private streamelementsClient: ServiceProvider<StreamElementsServiceClient> | undefined,
+		private twitchClient: ServiceProvider<TwitchChatServiceClient> | undefined,
         protected nodecg: NodeCG,
     ) {
         super("StreamBar", nodecg);
@@ -34,10 +36,26 @@ export class StreamBarManager extends Manager {
         });
         this.register(this.spotifyClient, "SpotifyClient", () => this.initSpotifyClient());
         this.register(this.streamelementsClient, "StreamelementsClient", () => this.initStreamelementsClient());
-
+		this.register(this.twitchClient, "TwitchClient", () => this.initTwitchClient());
         // TODO: Write frontend
-        // TODO: Add bot702 and !song
     }
+
+	async initTwitchClient(): Promise<void> {
+		await this.twitchClient?.getClient()?.join("skate702");
+		this.twitchClient?.getClient()?.onMessage(async (channel, message, msg) => {
+			if (message.toLowerCase().startsWith("!song")) {
+				if (message.split(" ").length === 2) {
+					const target = message.split(" ")[1];
+					await this.retrieveCurrentSong();
+					this.twitchClient?.getClient()?.say(channel, `${target} Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`, {replyTo: msg});
+				} else {
+					await this.retrieveCurrentSong();
+					this.twitchClient?.getClient()?.say(channel, `Current song is "${this.streamBarInfo.value.artistName}" - "${this.streamBarInfo.value.songName}"`, {replyTo: msg});
+				}
+
+			}
+		});
+	}
 
     initStreamelementsClient(): void {
         this.streamelementsClient?.getClient()?.onSubscriber(data => {
