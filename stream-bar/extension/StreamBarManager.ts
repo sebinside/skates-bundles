@@ -1,5 +1,5 @@
 /// <reference types="@types/spotify-api" />
-import { Manager } from "skates-utils";
+import { ChatBot, Manager } from "skates-utils";
 import { SpotifyServiceClient } from "nodecg-io-spotify";
 import { StreamElementsServiceClient } from "nodecg-io-streamelements";
 import { TwitchChatServiceClient } from "nodecg-io-twitch-chat";
@@ -25,7 +25,7 @@ export class StreamBarManager extends Manager {
     constructor(
         private spotifyClient: ServiceProvider<SpotifyServiceClient> | undefined,
         private streamelementsClient: ServiceProvider<StreamElementsServiceClient> | undefined,
-		private twitchClient: ServiceProvider<TwitchChatServiceClient> | undefined,
+        private twitchClient: ServiceProvider<TwitchChatServiceClient> | undefined,
         protected nodecg: NodeCG,
     ) {
         super("StreamBar", nodecg);
@@ -36,28 +36,16 @@ export class StreamBarManager extends Manager {
         });
         this.register(this.spotifyClient, "SpotifyClient", () => this.initSpotifyClient());
         this.register(this.streamelementsClient, "StreamelementsClient", () => this.initStreamelementsClient());
-		this.register(this.twitchClient, "TwitchClient", () => this.initTwitchClient());
+        this.register(this.twitchClient, "TwitchClient", () => this.initTwitchClient());
     }
 
-	async initTwitchClient(): Promise<void> {
-
-        const channel = "#skate702";
-
-		this.twitchClient?.getClient()?.join(channel)
-        .then(() => {
-            this.nodecg.log.info(`Connected stream-bar bot to twitch channel "${channel}"`);
-
-            this.twitchClient?.getClient()?.onMessage(async (chan, user, message, _) => {
-                if (chan === channel.toLowerCase() && message.match("!song")) {
-                        await this.retrieveCurrentSong();
-                        this.twitchClient?.getClient()?.say(channel, `Der aktuelle Song ist "${this.streamBarInfo.value.songName}" von ${this.streamBarInfo.value.artistName}`, {replyTo: user});
-                }
+    async initTwitchClient(): Promise<void> {
+        ChatBot.getInstance().registerCommand("song", true, this.twitchClient, this.nodecg,
+            async (_: string, __: string, msg) => {
+                await this.retrieveCurrentSong();
+                this.twitchClient?.getClient()?.say(ChatBot.CHANNEL, `Der aktuelle Song ist "${this.streamBarInfo.value.songName}" von ${this.streamBarInfo.value.artistName}`, { replyTo: msg });
             });
-        })
-        .catch((reason) => {
-            this.nodecg.log.error(`Couldn't connect to twitch: ${reason}.`);
-        });
-	}
+    }
 
     initStreamelementsClient(): void {
         this.streamelementsClient?.getClient()?.onSubscriber(data => {

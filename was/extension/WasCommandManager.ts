@@ -1,7 +1,7 @@
 import { ServiceProvider } from "nodecg-io-core";
 import { TwitchChatServiceClient } from "nodecg-io-twitch-chat";
 import { NodeCG } from "nodecg-types/types/server";
-import { Manager } from "skates-utils";
+import { ChatBot, Manager } from "skates-utils";
 import { TwitchApiServiceClient } from "nodecg-io-twitch-api";
 import { MessageController } from "./MessageController";
 import { SQLClient } from "nodecg-io-sql";
@@ -23,17 +23,21 @@ export class WasCommandManager extends Manager {
         this.initReadyListener(this.chatClient);
     }
 
-    public static readonly CHANNEL = "#skate702";
-    public static readonly COMMAND = /^!was(\s.*|$)/;
-    public static readonly TIMEOUT_IN_SECONDS = 10;
     public static readonly DB_REFRESH_INTERVAL = 10;
-
-    private lastMessage = Date.now();
 
     private messageController = new MessageController(this.nodecg);
 
     async initChat(): Promise<void> {
-        this.addListener(WasCommandManager.CHANNEL);
+        ChatBot.getInstance().registerCommand("was", true, this.chatClient, this.nodecg,
+            async (_: string, __: string, msg) => {
+                const game = (await this.retrieveCurrentGame()) || "";
+
+                if (this.messageController.hasMessage(game)) {
+                    this.chatClient?.getClient()?.say(ChatBot.CHANNEL, this.messageController.getMessage(game)?.toString() || "", { replyTo: msg });
+                } else {
+                    this.nodecg.log.info(`Unable to find !was output for game: ${game}`);
+                }
+            });
     }
 
     async initApiClient(): Promise<void> {
@@ -55,40 +59,6 @@ export class WasCommandManager extends Manager {
             const game = (await this.retrieveCurrentGame()) || "";
             dbController.setCurrentGameAndUpdate(game);
         }, WasCommandManager.DB_REFRESH_INTERVAL * 1000);
-    }
-
-    private addListener(channel: string) {
-        this.chatClient
-            ?.getClient()
-            ?.join(channel)
-            .then(() => {
-                this.nodecg.log.info(`Connected !was-manager to twitch channel "${channel}"`);
-
-                this.chatClient?.getClient()?.onMessage((chan, _, message, _msg) => {
-                    if (chan === channel.toLowerCase() && message.match(WasCommandManager.COMMAND)) {
-                        this.postMessage();
-                    }
-                });
-            })
-            .catch((reason) => {
-                this.nodecg.log.error(`Couldn't connect to twitch: ${reason}.`);
-            });
-    }
-
-    private async postMessage() {
-        if (Date.now() - this.lastMessage > WasCommandManager.TIMEOUT_IN_SECONDS * 1000) {
-            this.lastMessage = Date.now();
-
-            const game = (await this.retrieveCurrentGame()) || "";
-
-            if (this.messageController.hasMessage(game)) {
-                this.chatClient
-                    ?.getClient()
-                    ?.say(WasCommandManager.CHANNEL, this.messageController.getMessage(game)?.toString() || "");
-            } else {
-                this.nodecg.log.info(`Unable to find !was output for game: ${game}`);
-            }
-        }
     }
 
     private async retrieveCurrentGame() {
