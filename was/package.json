@@ -17,6 +17,13 @@
                 "fullbleed": true,
                 "headerColor": "#546B85"
             }
+        ],
+        "graphics": [
+            {
+                "file": "was-stream-overlay.html",
+                "width": 450,
+                "height": 350
+            }
         ]
     },
     "license": "MIT",
