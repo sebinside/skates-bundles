@@ -4,6 +4,9 @@ import { Message, PresetCollection } from "./types";
 export class MessageController {
     static readonly REPLICANT_VALUES: string = "was.values";
     static readonly REPLICANT_MESSAGES: string = "was.messages";
+    static readonly REPLICANT_CURRENT_GAME: string = "was.currentgame";
+
+    private static readonly defaultGame: string = "Minecraft";
 
     private static readonly defaultMessages: Record<string, Message> = {
         "Science & Technology": {
@@ -21,7 +24,7 @@ export class MessageController {
             details: "Sebastian spielt Uhren-Hunde. Wau wau wau!",
             hyperlink: "702.yt/was",
         },
-        Minecraft: {
+        "Minecraft": {
             content: "Sebastian baut ein neues Minecraft Skyblock Modpack",
             details: "Sebastian baut ein neues Minecraft Skyblock Expert Modpack",
             hyperlink: "702.yt/was",
@@ -42,11 +45,18 @@ export class MessageController {
     };
 
     private messages: ReplicantServer<Record<string, Message>>;
+    private currentGame: ReplicantServer<string>;
 
     constructor(private nodecg: NodeCG) {
+
         this.nodecg.Replicant(MessageController.REPLICANT_VALUES, { defaultValue: MessageController.defaultValues });
+
         this.messages = this.nodecg.Replicant(MessageController.REPLICANT_MESSAGES, {
             defaultValue: MessageController.defaultMessages,
+        });
+
+        this.currentGame = this.nodecg.Replicant(MessageController.REPLICANT_CURRENT_GAME, {
+            defaultValue: MessageController.defaultGame
         });
     }
 
@@ -71,5 +81,9 @@ export class MessageController {
     // Convention (because of the lack of OOP): empty project == gaming message
     private isGamingMessage(message: Message | undefined): boolean | undefined {
         return message?.project === undefined || message.project === "";
+    }
+
+    public setCurrentGame(game: string): void {
+       this.currentGame.value = game;
     }
 }

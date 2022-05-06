@@ -21,9 +21,10 @@ export class WasCommandManager extends Manager {
         });
         this.register(this.sqlClient, "SQL client", () => this.initDB());
         this.initReadyListener(this.chatClient);
+        this.initUI();
     }
 
-    public static readonly DB_REFRESH_INTERVAL = 10;
+    public static readonly REFRESH_INTERVAL = 10;
 
     private messageController = new MessageController(this.nodecg);
 
@@ -58,7 +59,7 @@ export class WasCommandManager extends Manager {
         setInterval(async () => {
             const game = (await this.retrieveCurrentGame()) || "";
             dbController.setCurrentGameAndUpdate(game);
-        }, WasCommandManager.DB_REFRESH_INTERVAL * 1000);
+        }, WasCommandManager.REFRESH_INTERVAL * 1000);
     }
 
     private async retrieveCurrentGame() {
@@ -66,5 +67,14 @@ export class WasCommandManager extends Manager {
         const stream = await user?.getStream();
         const game = await stream?.getGame();
         return game?.name;
+    }
+
+    private async initUI(): Promise<void> {
+        setInterval(async () => {
+            const game = await this.retrieveCurrentGame();
+            if (game) {
+                this.messageController.setCurrentGame(game);
+            }
+        }, WasCommandManager.REFRESH_INTERVAL * 1000);
     }
 }
