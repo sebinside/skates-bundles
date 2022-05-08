@@ -39,25 +39,46 @@ body {
     color: #13acff;
 }
 
-#container {
+#allcontainers {
+    position: relative;
+}
+
+.container {
     font-family: Consolas;
     font-size: 18pt;
     padding:10px;
     color:#bebdbd;
+    opacity: 0;
+    position: absolute;
+    -webkit-transition: opacity 1s;
+    -moz-transition: opacity 1s;
+    -o-transition: opacity 1s;
+    transition: opacity 1s;
 }
 
-#content {
+.active {
+    opacity: 1;
+}
+
+.content {
     padding:3px;
 }
 
-#title {
+.title {
     font-size: 24pt;
     padding-bottom: 10px;
     padding-top: 5px;
     color: white;
 }
 
-#title .highlight {
-    color: #FFAB00;
+.container .highlight {
     font-weight: bold;
+}
+
+#message_what .highlight {
+    color: #FFAB00;
+}
+
+#message_where .highlight {
+    color: #0099ff;
 }

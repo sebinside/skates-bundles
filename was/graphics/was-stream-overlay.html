@@ -1,29 +1,59 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <title>WAS</title>
     <link rel="stylesheet" href="./css/all.css">
     <link rel="stylesheet" href="was.css">
     <script src="./was.js"></script>
 </head>
+
 <body>
-	<div id="main">
+    <div id="main">
         <div id="header">
             <i id="symbol" class="fa-duotone fa-square-info"></i>
             <span id="windowtitle">Information</span>
         </div>
-        <div id="container">
-            <div id="title">
-                <span class="highlight">!was</span> macht er gerade?
+        <div id="allcontainers">
+            <div class="container" id="message_what">
+                <div class="title">
+                    <span class="highlight">!was</span> mache ich gerade?
+                </div>
+                <div class="content" id="maincontent" onclick="test()">
+                    Bitte warten...
+                </div>
             </div>
-            <div id="content">
-                Bitte warten...
+            <div class="container" id="message_where">
+                <div class="title">
+                    <span class="highlight">!wo</span> findet man den Code?
+                </div>
+                <div class="content">
+                    Alles was ich programmiere ist Open-Source und auf GitHub zu finden. Für den Link einfach <span
+                        class="highlight">!github</span> in den Chat schreiben.
+                </div>
             </div>
         </div>
     </div>
     <script>
         init();
+
+        let slides = document.querySelectorAll("#allcontainers .container")
+        let currentSlide = 0
+        const nextSlide = () => {
+            goToSlide(currentSlide + 1)
+        }
+        const previousSlide = () => {
+            goToSlide(currentSlide - 1)
+        }
+        let slideInterval = setInterval(nextSlide, 10000)
+        const goToSlide = (s) => {
+            slides[currentSlide].className = "container"
+            currentSlide = (s + slides.length) % slides.length
+            slides[currentSlide].className = "container active"
+        }
+        nextSlide();
     </script>
 </body>
+
 </html>

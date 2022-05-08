@@ -14,5 +14,5 @@ function init() {
 
 function updateUI() {
     const message = messagesReplicant.value[currentGameReplicant.value];
-    document.querySelector("#content").innerText = message.details;
+    document.querySelector("#maincontent").innerText = message.details;
 }
