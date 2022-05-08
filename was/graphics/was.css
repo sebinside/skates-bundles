@@ -49,15 +49,19 @@ body {
     padding:10px;
     color:#bebdbd;
     opacity: 0;
+    filter: blur(5px);
+    transform: scale(0.9);
     position: absolute;
-    -webkit-transition: opacity 1s;
-    -moz-transition: opacity 1s;
-    -o-transition: opacity 1s;
-    transition: opacity 1s;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s;
 }
 
 .active {
     opacity: 1;
+    filter: blur(0px);
+    transform: scale(1);
 }
 
 .content {
@@ -81,4 +85,8 @@ body {
 
 #message_where .highlight {
     color: #0099ff;
+}
+
+#message_who .highlight {
+    color: #d0ff00;
 }

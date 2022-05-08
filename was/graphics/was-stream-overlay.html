@@ -15,6 +15,7 @@
             <i id="symbol" class="fa-duotone fa-square-info"></i>
             <span id="windowtitle">Information</span>
         </div>
+
         <div id="allcontainers">
             <div class="container" id="message_what">
                 <div class="title">
@@ -33,26 +34,19 @@
                         class="highlight">!github</span> in den Chat schreiben.
                 </div>
             </div>
+            <div class="container" id="message_who">
+                <div class="title">
+                    <span class="highlight">!wer</span> bin ich eigentlich?
+                </div>
+                <div class="content">
+                    Ich bin Sebastian, Doktorand und wissenschaftlicher Mitarbeiter am KIT in Karlsruhe. In meiner Freizeit streame ich Coding-Projekte und probiere neue Technologien aus.
+                </div>
+            </div>
         </div>
+
     </div>
     <script>
         init();
-
-        let slides = document.querySelectorAll("#allcontainers .container")
-        let currentSlide = 0
-        const nextSlide = () => {
-            goToSlide(currentSlide + 1)
-        }
-        const previousSlide = () => {
-            goToSlide(currentSlide - 1)
-        }
-        let slideInterval = setInterval(nextSlide, 10000)
-        const goToSlide = (s) => {
-            slides[currentSlide].className = "container"
-            currentSlide = (s + slides.length) % slides.length
-            slides[currentSlide].className = "container active"
-        }
-        nextSlide();
     </script>
 </body>
 

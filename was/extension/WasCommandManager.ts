@@ -29,7 +29,7 @@ export class WasCommandManager extends Manager {
     private messageController = new MessageController(this.nodecg);
 
     async initChat(): Promise<void> {
-        ChatBot.getInstance().registerCommand("was", true, this.chatClient, this.nodecg,
+        ChatBot.getInstance().registerCommand("was", false, this.chatClient, this.nodecg,
             async (_: string, __: string, msg) => {
                 const game = (await this.retrieveCurrentGame()) || "";
 
