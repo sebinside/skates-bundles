@@ -28,7 +28,7 @@ body {
     align-items: center;
 }
 
-#title {
+#windowtitle {
     color: #878787;
     font-weight: 400;
     padding-left: 15px;
@@ -39,9 +39,25 @@ body {
     color: #13acff;
 }
 
-#content {
+#container {
     font-family: Consolas;
     font-size: 18pt;
     padding:10px;
     color:#bebdbd;
+}
+
+#content {
+    padding:3px;
+}
+
+#title {
+    font-size: 24pt;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    color: white;
+}
+
+#title .highlight {
+    color: #FFAB00;
+    font-weight: bold;
 }
