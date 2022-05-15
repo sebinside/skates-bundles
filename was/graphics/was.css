@@ -79,6 +79,10 @@ body {
     font-weight: bold;
 }
 
+#template {
+    display: none;
+}
+
 #message_what .highlight {
     color: #FFAB00;
 }

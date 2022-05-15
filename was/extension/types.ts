@@ -16,3 +16,9 @@ export interface Message {
     readonly editor?: string;
     readonly theme?: string;
 }
+
+export interface DisplayMessage {
+    title: string;
+    content: string;
+    id: string;
+}

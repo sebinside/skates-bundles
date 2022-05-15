@@ -1,12 +1,31 @@
 import { NodeCG, ReplicantServer } from "nodecg-types/types/server";
-import { Message, PresetCollection } from "./types";
+import { DisplayMessage, Message, PresetCollection } from "./types";
 
 export class MessageController {
     static readonly REPLICANT_VALUES: string = "was.values";
     static readonly REPLICANT_MESSAGES: string = "was.messages";
     static readonly REPLICANT_CURRENT_GAME: string = "was.currentgame";
+    static readonly REPLICANT_CURRENT_MESSAGES: string = "was.currentmessages"
 
     private static readonly defaultGame: string = "Minecraft";
+
+    private static readonly defaultCurrentMessages: Array<DisplayMessage> = [
+        {
+            title: '<span class="highlight">!wo</span> findet man den Code?',
+            content: 'Alles was ich programmiere ist Open-Source und auf GitHub zu finden. Für den Link einfach <span class="highlight">!github</span> in den Chat schreiben.',
+            id: 'message_where'
+        },
+        {
+            id: 'message_who',
+            title: '<span class="highlight">!wer</span> bin ich eigentlich?',
+            content: 'Ich bin Sebastian, Doktorand und wissenschaftlicher Mitarbeiter am KIT in Karlsruhe. In meiner Freizeit streame ich Coding-Projekte und probiere neue Technologien aus.'
+        },
+        {
+            id: 'message_what',
+            title: '<span class="highlight">!was</span> mache ich gerade?',
+            content: ' Bitte warten...'
+        }
+    ]
 
     private static readonly defaultMessages: Record<string, Message> = {
         "Science & Technology": {
@@ -46,6 +65,7 @@ export class MessageController {
 
     private messages: ReplicantServer<Record<string, Message>>;
     private currentGame: ReplicantServer<string>;
+    private currentMessages: ReplicantServer<Array<DisplayMessage>>;
 
     constructor(private nodecg: NodeCG) {
 
@@ -58,6 +78,10 @@ export class MessageController {
         this.currentGame = this.nodecg.Replicant(MessageController.REPLICANT_CURRENT_GAME, {
             defaultValue: MessageController.defaultGame
         });
+
+        this.currentMessages = this.nodecg.Replicant(MessageController.REPLICANT_CURRENT_MESSAGES, {
+            defaultValue: MessageController.defaultCurrentMessages
+        })
     }
 
     public getMessage(game: string): string {
@@ -84,6 +108,10 @@ export class MessageController {
     }
 
     public setCurrentGame(game: string): void {
-       this.currentGame.value = game;
+        this.currentGame.value = game;
+
+        const message = this.messages.value[game];
+        // Don't look at this. Look away! Shall be fixed soonishTM
+        this.currentMessages.value.find(it => it.id === "message_what")!.content = message!.details;
     }
 }
