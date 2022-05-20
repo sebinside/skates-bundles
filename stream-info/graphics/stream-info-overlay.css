@@ -1,0 +1,96 @@
+body {
+    background-color: black;
+}
+
+#main {
+    height: 295px;
+    width: 450px;
+    background-color: #272727;
+    border: 1px solid #383838;
+    border-radius: 8px;
+    overflow: hidden;
+    color: white;
+}
+
+#header {
+    height: 43px;
+    width: 100%;
+    background-color: #1c1c1c;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 18pt;
+    padding-left: 15px;
+    background-image: url("./close.png");
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 405px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+#windowtitle {
+    color: #878787;
+    font-weight: 400;
+    padding-left: 15px;
+    font-size: 18pt;
+}
+
+#symbol {
+    color: #13acff;
+}
+
+#allcontainers {
+    position: relative;
+}
+
+.container {
+    font-family: Consolas;
+    font-size: 18pt;
+    padding:10px;
+    color:#bebdbd;
+    opacity: 0;
+    filter: blur(5px);
+    transform: scale(0.9);
+    position: absolute;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s;
+}
+
+.active {
+    opacity: 1;
+    filter: blur(0px);
+    transform: scale(1);
+}
+
+.content {
+    padding:3px;
+}
+
+.title {
+    font-size: 24pt;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    color: white;
+}
+
+.container .highlight {
+    font-weight: bold;
+}
+
+#template {
+    display: none;
+}
+
+.messageType-what {
+    color: #FFAB00;
+}
+
+.messageType-where {
+    color: #0099ff;
+}
+
+.messageType-who {
+    color: #d0ff00;
+}

@@ -12,6 +12,10 @@ export class ChatBot {
 
     private static chatBot: ChatBot = new ChatBot();
 
+    /**
+     * Return the chat bot instance (singleton pattern).
+     * @returns a chat bot instance
+     */
     public static getInstance(): ChatBot {
         return ChatBot.chatBot;
     }
@@ -77,15 +81,24 @@ export class ChatBot {
             }) ?? false;
     }
 
+    /**
+     * Returns a list of registered commands.
+     * @returns a list of command keywords
+     */
     public getRegisteredCommands(): string[] {
         return [...this.commandTimeouts.keys()];
     }
 
+    /**
+     * Returns if the specified command has already been registered
+     * @param command the (not normalized) command to test
+     * @returns true, if the command has already been registered
+     */
     public isCommandRegistered(command: string): boolean {
         return this.getRegisteredCommands().indexOf(this.normalizeCommand(command)) !== -1;
     }
 
     private normalizeCommand(command: string) {
-        return command.toLowerCase().replace("!", "");
+        return command.toLowerCase().replace(ChatBot.COMMAND_SYMBOL, "");
     }
 }
