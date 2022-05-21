@@ -1,0 +1,40 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/setup-node@v3.2.0
+              with:
+                  node-version: "16"
+
+            - name: Install system dependencies
+              run: sudo apt update && sudo apt-get -y install libusb-1.0-0-dev libasound2-dev libudev-dev
+
+            - name: Download nodecg-io
+              uses: actions/checkout@v3
+              with:
+                repository: codeoverflow-org/nodecg-io
+
+            - name: Install nodejs dependencies
+              run: npm i
+
+
+            - name: Download skate-bundles
+              uses: actions/checkout@v3
+              with:
+                path: "skates-bundles"
+
+            - name: Add skates-bundles to npm workspace
+              run: |
+                mv package.json package-original.json
+                cat package-original.json | jq '.workspaces += ["skates-bundles/*"]' > package.json
+                rm package-original.json
+
+            - name: Install node.js dependencies
+              run: npm i
+
+            - name: Build skates-bundles
+              run: npm run build
