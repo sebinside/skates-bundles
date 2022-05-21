@@ -1,3 +1,6 @@
+/// <reference types="nodecg-types/types/browser" />
+import { createApp } from "vue";
+
 const ANIMATION_INTERVAL_IN_MS = 10000;
 
 const dummyResult = {
@@ -8,14 +11,12 @@ const dummyResult = {
     "lastBomb": ""
 };
 
-const { createApp } = Vue;
-
 createApp({
     data() {
         return dummyResult;
     },
     created() {
-        nodecg.Replicant('streambar.info')
+        nodecg.Replicant<any>('streambar.info')
             .on("change", (newValues) => {
                 this.currentSong = `${newValues.artistName} - ${newValues.songName}`;
                 this.lastBomb = newValues.lastBomb;
@@ -30,14 +31,14 @@ function startAnimation() {
     const slides = document.querySelectorAll("#bar .content")
     let currentSlide = 0
 
-    const goToSlide = (nextSlideIdx) => {
-        let slide = slides[currentSlide];
+    const goToSlide = (nextSlideIdx: number) => {
+        let slide = slides[currentSlide] as HTMLElement;
 
         if (slide) {
             slide.classList.remove("active");
         }
         currentSlide = (nextSlideIdx + slides.length) % slides.length
-        slide = slides[currentSlide];
+        slide = slides[currentSlide] as HTMLElement;
 
         // Don't show the slide if it has no content (e.g. when not data fetched yet)
         if (slide.innerText.trim().length === 0) {

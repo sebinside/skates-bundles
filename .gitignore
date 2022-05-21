@@ -21,3 +21,5 @@ node_modules/
 
 # root tsconfig.json file (will be created by the nodecg-io build system)
 /tsconfig.json
+
+!esbuild.config.js
