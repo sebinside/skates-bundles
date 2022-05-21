@@ -1,19 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Stream Bar</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.css" />
     <script src="https://use.fontawesome.com/00fbe66760.js"></script>
-    <script src="dependencies/jquery.js"></script>
-    <link rel="stylesheet" href="dependencies/all.css">
+    <link rel="stylesheet" href="dependencies/all.css" />
     <script src="dependencies/all.js"></script>
+    <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body>
-	<div id="bar">
-		<div id="symbol"><i class="fas fa-spinner"></i></div>
-		<div id="content">Please wait...</div>
-	</div>
-	<script src="streambar.js"></script>
+    <div id="bar" v-cloak>
+        <div class="content active">
+            <i class="fas fa-music"></i>
+            <span class="contentText">
+                {{ currentSong }}
+            </span>
+        </div>
+        <div class="content">
+            <i class="fas fa-heart"></i>
+            <span class="contentText">
+                {{ lastSubscriber }}
+            </span>
+        </div>
+        <div class="content">
+            <i class="fas fa-glass-cheers"></i>
+            <span class="contentText">
+                {{ lastCheer }}
+            </span>
+        </div>
+        <div class="content">
+            <i class="fas fa-gift"></i>
+            <span class="contentText">
+                {{ lastBomb }}
+            </span>
+        </div>
+        <div class="content">
+            <i class="fas fa-money-bill-wave"></i>
+            <span class="contentText">
+                {{ lastTip }}
+            </span>
+        </div>
+        <div class="content">
+            <i class="fas fa-tshirt"></i>
+            <span class="contentText">
+                shop.skate702.de
+            </span>
+        </div>
+    </div>
+    <script src="streambar.js"></script>
 </body>
 </html>

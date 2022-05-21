@@ -1,3 +1,5 @@
+const ANIMATION_INTERVAL_IN_MS = 10000;
+
 const dummyResult = {
     "currentSong": "",
     "lastSubscriber": "",
@@ -6,103 +8,60 @@ const dummyResult = {
     "lastBomb": ""
 };
 
-const contentOrder = [setShopName, setCurrentSong, setLastSubscriber, setLastCheer, setLastBomb, setLastTip];
-let currentData = dummyResult;
+const { createApp } = Vue;
 
-function setCurrentSong() {
-    if (currentData.currentSong !== "") {
-        const symbolCode = "music";
-        return setContent(symbolCode, currentData.currentSong);
+createApp({
+    data() {
+        return dummyResult;
+    },
+    created() {
+        nodecg.Replicant('streambar.info')
+            .on("change", (newValues) => {
+                this.currentSong = `${newValues.artistName} - ${newValues.songName}`;
+                this.lastBomb = newValues.lastBomb;
+                this.lastCheer = newValues.lastCheer;
+                this.lastSubscriber = newValues.lastSubscriber;
+                this.lastTip = newValues.lastTip;
+            });
     }
-    return false;
-}
+}).mount("#bar");
 
-function setLastSubscriber() {
-    if (currentData.lastSubscriber !== "") {
-        const symbolCode = "heart";
-        return setContent(symbolCode, currentData.lastSubscriber);
-    }
-    return false;
-}
+function startAnimation() {
+    const slides = document.querySelectorAll("#bar .content")
+    let currentSlide = 0
 
-function setLastCheer() {
-    if (currentData.lastCheer !== "") {
-        const symbolCode = "glass-cheers";
-        return setContent(symbolCode, currentData.lastCheer);
-    }
-    return false;
-}
+    const goToSlide = (nextSlideIdx) => {
+        let slide = slides[currentSlide];
 
-function setLastBomb() {
-    if (currentData.lastBomb !== "") {
-        const symbolCode = "gift";
-        return setContent(symbolCode, currentData.lastBomb);
-    }
-    return false;
-}
+        if (slide) {
+            slide.classList.remove("active");
+        }
+        currentSlide = (nextSlideIdx + slides.length) % slides.length
+        slide = slides[currentSlide];
 
-function setLastTip() {
-    if (currentData.lastTip !== "") {
-        const symbolCode = "money-bill-wave";
-        return setContent(symbolCode, currentData.lastTip);
-    }
-    return false;
-}
-
-function setShopName() {
-    const symbolCode = "tshirt";
-    const shopName = "shop.skate702.de";
-    return setContent(symbolCode, shopName);
-}
-
-function setContent(symbol, content) {
-    const symbolHTML = `<i class="fas fa-${symbol}"></i>`;
-    $("#symbol").fadeOut(500, () => {
-        $("#symbol").html(symbolHTML).fadeIn(500);
-    });
-
-    $('#content').fadeOut(500, () => {
-
-        if(content.length < 18) {
-            $("#content").css("font-size", "30pt").css("padding-top", "0px");
-        } else {
-            $("#content").css("font-size", "20pt").css("padding-top", "7px");
+        // Don't show the slide if it has no content (e.g. when not data fetched yet)
+        if (slide.innerText.trim().length === 0) {
+            goToSlide(currentSlide + 1);
+            return;
         }
 
-        $('#content').text(content).fadeIn(500);
-    });
-    return true;
-}
+        if (slide) {
+            slide.classList.add("active");
 
-function start() {
-    const testReplicant = nodecg.Replicant('streambar.info');
-
-	testReplicant.on('change', (newValue, oldValue) => {
-		currentData.currentSong = `${newValue.artistName} - ${newValue.songName}`;
-        currentData.lastBomb = newValue.lastBomb;
-        currentData.lastCheer = newValue.lastCheer;
-        currentData.lastSubscriber = newValue.lastSubscriber;
-        currentData.lastTip = newValue.lastTip;
-	});
-
-
-    let index = 0;
-    setInterval(() => {
-        index = loop(index)
-    }, 10000)
-}
-
-function loop(index) {
-    if (index >= contentOrder.length) {
-        index = 0;
+            const text = slide.getElementsByClassName("contentText")[0];
+            if (text) {
+                if (slide.innerText.trim().length >= 16) {
+                    text.classList.add("longContent");
+                } else {
+                    text.classList.remove("longContent");
+                }
+            }
+        }
     }
 
-    // Check if (new) information is available
-    if (!contentOrder[index]()) {
-        return loop(index + 1);
-    }
-
-    return index + 1;
+    setInterval(() => goToSlide(currentSlide + 1), ANIMATION_INTERVAL_IN_MS)
+    goToSlide(0);
 }
 
-start();
+
+startAnimation();
