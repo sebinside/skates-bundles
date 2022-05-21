@@ -5,15 +5,7 @@ import { StreamElementsServiceClient } from "nodecg-io-streamelements";
 import { TwitchChatServiceClient } from "nodecg-io-twitch-chat";
 import { ServiceProvider } from "nodecg-io-core";
 import { NodeCG, ReplicantServer } from "nodecg-types/types/server";
-
-export interface StreamBarInfo {
-    lastBomb?: string;
-    lastSubscriber?: string;
-    lastTip?: string;
-    lastCheer?: string;
-    songName?: string;
-    artistName?: string;
-}
+import { StreamBarInfo } from "./StreamBarInfo";
 
 export class StreamBarManager extends Manager {
 

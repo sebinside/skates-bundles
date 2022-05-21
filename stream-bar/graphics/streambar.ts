@@ -1,5 +1,6 @@
 /// <reference types="nodecg-types/types/browser" />
 import { createApp } from "vue";
+import type { StreamBarInfo } from "../extension/StreamBarInfo";
 
 const ANIMATION_INTERVAL_IN_MS = 10000;
 
@@ -16,7 +17,7 @@ createApp({
         return dummyResult;
     },
     created() {
-        nodecg.Replicant<any>('streambar.info')
+        nodecg.Replicant<StreamBarInfo>('streambar.info')
             .on("change", (newValues) => {
                 this.currentSong = `${newValues.artistName} - ${newValues.songName}`;
                 this.lastBomb = newValues.lastBomb;

@@ -5,5 +5,10 @@
         "lib": ["ES2015", "dom"],
         "module": "ES2015",
         "noEmit": true
-    }
+    },
+    "references": [
+        {
+            "path": "../extension"
+        }
+    ]
 }
