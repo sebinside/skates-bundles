@@ -3,8 +3,7 @@ import { DefaultMessages } from "./DefaultMessages";
 import { DisplayMessage, StreamInfoConfig } from "./types";
 
 export class MessageController {
-
-    private static readonly REPLICANT_ID_CURRENT_CATEGORY: string = "streaminfo.currentcategory";
+        private static readonly REPLICANT_ID_CURRENT_CATEGORY: string = "streaminfo.currentcategory";
     private static readonly REPLICANT_ID_ALL_MESSAGES: string = "streaminfo.allmessages";
     private static readonly REPLICANT_ID_CURRENT_MESSAGES: string = "streaminfo.currentmessages";
     private static readonly REPLICANT_ID_CONFIGS: string = "streaminfo.config";
@@ -40,7 +39,7 @@ export class MessageController {
             message = config.url ? `${message} | Mehr Infos: ${config.url}` : message;
         }
 
-        return message;
+        return message.replaceAll("{", "").replaceAll("}", "");
     }
 
     public getCurrentInfoMessage(): string {
@@ -52,13 +51,43 @@ export class MessageController {
     }
 
     public setCurrentCategory(category: string): void {
-        this.currentCategoryReplicant.value = category;
+        if(this.currentCategoryReplicant.value !== category) {
+            this.currentCategoryReplicant.value = category;
+            this.nodecg.log.info(`Updated category to ${category}.`)
+        }
     }
 
     public getCurrentCategory(): string {
         return this.currentCategoryReplicant.value;
     }
 
-    // TODO: Dynamically generate current messages based on category changes
-    // TODO: Update Dashboard UI (complete overhaul)
+    public getCurrentURL(): string | undefined {
+        const category = this.currentCategoryReplicant.value;
+        return this.getActiveConfigForCategory(category)?.url;
+    }
+
+    public updateCurrentMessages() {
+        const category = this.currentCategoryReplicant.value;
+        const config = this.getActiveConfigForCategory(category);
+        
+        const whatMessage : DisplayMessage = {
+            title: "{!was} mache ich gerade?",
+            content: config?.description || "",
+            type: "what"
+        }
+
+        const allMessages: Record<string, DisplayMessage> = {};
+        config?.messageIds.forEach(id => {
+            const message = this.allMessagesReplicant.value[id];
+
+            if(message) {
+                allMessages[id] = message;
+            } else {
+                this.nodecg.log.warn(`Unable to find message with ID ${id}.`);
+            }
+        });
+
+        allMessages["what"] = whatMessage;
+        this.currentMessagesReplicant.value = allMessages;
+    }
 }

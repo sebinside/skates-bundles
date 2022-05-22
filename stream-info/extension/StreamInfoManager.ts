@@ -32,6 +32,9 @@ export class StreamInfoManager extends Manager {
             if (category) {
                 this.messageController.setCurrentCategory(category);
             }
+
+            this.messageController.updateCurrentMessages();
+
         }, StreamInfoManager.REFRESH_INTERVAL_IN_MS);
     }
 

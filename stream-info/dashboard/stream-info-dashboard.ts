@@ -24,10 +24,14 @@ function initDashboard() {
 
         allMessagesReplicant.on('change', (newValue) => {
             const allMessageIdsElement = document.querySelector<HTMLElement>("#allMessageIds")
+            let htmlContent = "";
 
-            // TODO: Add proper formatting
-            if (allMessageIdsElement) {
-                allMessageIdsElement.innerHTML = Object.keys(newValue).join(", ");
+            if (allMessageIdsElement && Object.keys(newValue).length > 0) {
+                Object.keys(newValue).forEach(id => {
+                    htmlContent += `<div class="messageId">${id}</div>`;
+                });
+
+                allMessageIdsElement.innerHTML = htmlContent;
             }
         });
 
@@ -141,7 +145,12 @@ function collectConfigs() {
         }
     }
 
-    // TODO: Perform sanity check and warn for duplicate active categories
+    // Sanity check in O(n^2)
+    configs.forEach(config => {
+        if (configs.filter(it => it.category === config.category && it.active).length > 1) {
+            alert(`More than one active config found for category: ${config.category}`);
+        }
+    });
 
     return configs;
 }
