@@ -1,3 +1,14 @@
 {
-    "extends": "nodecg-io-tsconfig"
+    "files": [],
+    "compilerOptions": {
+        "composite": true
+    },
+    "references": [
+        {
+            "path": "./extension"
+        },
+        {
+            "path": "./graphics"
+        }
+    ]
 }
