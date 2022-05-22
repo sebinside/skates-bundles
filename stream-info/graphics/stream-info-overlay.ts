@@ -8,8 +8,8 @@ type DisplayMessage = {
 
 const currentMessagesReplicant = nodecg.Replicant('streaminfo.currentmessages');
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function init(): void {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars 
+function initOverlay(): void {
     NodeCG.waitForReplicants(currentMessagesReplicant).then(() => {
         currentMessagesReplicant.on('change', () => {
             updateUI();

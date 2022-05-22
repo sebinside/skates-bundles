@@ -11,20 +11,23 @@ export class MessageController {
 
     private static readonly DEFAULT_INFO_MESSAGE: string = "Ich bin live!";
 
-    private currentGameReplicant: ReplicantServer<string>;
+    private currentCategoryReplicant: ReplicantServer<string>;
     private allMessagesReplicant: ReplicantServer<Record<string, DisplayMessage>>;
     private currentMessagesReplicant: ReplicantServer<Record<string, DisplayMessage>>;
     private configsReplicant: ReplicantServer<Array<StreamInfoConfig>>;
 
     constructor(private nodecg: NodeCG) {
-        this.initReplicant(MessageController.REPLICANT_ID_CURRENT_CATEGORY, DefaultMessages.REPLICANT_DEFAULT_CURRENT_CATEGORY);
-        this.initReplicant(MessageController.REPLICANT_ID_CURRENT_MESSAGES, DefaultMessages.REPLICANT_DEFAULT_CURRENT_MESSAGES);
-        this.initReplicant(MessageController.REPLICANT_ID_ALL_MESSAGES, DefaultMessages.REPLICANT_DEFAULT_ALL_MESSAGES);
-        this.initReplicant(MessageController.REPLICANT_ID_CONFIGS, DefaultMessages.REPLICANT_DEFAULT_CONFIGS);
+        this.currentCategoryReplicant = this.initReplicant(MessageController.REPLICANT_ID_CURRENT_CATEGORY, DefaultMessages.REPLICANT_DEFAULT_CURRENT_CATEGORY);
+
+        this.currentMessagesReplicant = this.initReplicant(MessageController.REPLICANT_ID_CURRENT_MESSAGES, DefaultMessages.REPLICANT_DEFAULT_CURRENT_MESSAGES);
+
+        this.allMessagesReplicant = this.initReplicant(MessageController.REPLICANT_ID_ALL_MESSAGES, DefaultMessages.REPLICANT_DEFAULT_ALL_MESSAGES);
+
+        this.configsReplicant = this.initReplicant(MessageController.REPLICANT_ID_CONFIGS, DefaultMessages.REPLICANT_DEFAULT_CONFIGS);
     }
 
-    private initReplicant(id: string, defaultValue: unknown) {
-        this.nodecg.Replicant(id, { defaultValue: defaultValue });
+    private initReplicant<T>(id: string, defaultValue: T) {
+        return this.nodecg.Replicant<T>(id, { defaultValue: defaultValue });
     }
 
     public getInfoMessage(category: string): string {
@@ -49,11 +52,11 @@ export class MessageController {
     }
 
     public setCurrentCategory(category: string): void {
-        this.currentGameReplicant.value = category;
+        this.currentCategoryReplicant.value = category;
     }
 
     public getCurrentCategory(): string {
-        return this.currentGameReplicant.value;
+        return this.currentCategoryReplicant.value;
     }
 
     // TODO: Dynamically generate current messages based on category changes

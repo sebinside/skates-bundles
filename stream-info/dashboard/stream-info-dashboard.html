@@ -1,73 +1,56 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="was.css" />
+        <link rel="stylesheet" href="stream-info-dashboard.css" />
     </head>
 
     <body>
         <div class="container" id="config">
             <div class="containerHead">
-                <span class="containerTitle">!was config</span>
+                <span class="containerTitle">stream-info config</span>
             </div>
             <div class="containerBody">
-                <button id="retrieveCurrentGame">Retrieve current game</button>
+                <button id="retrieveCurrentCategory">Retrieve current category</button>
                 <br /><br />
-                <button id="save">Save all answers</button>
+                <button id="saveConfig">Save all configs</button>
                 <br /><br />
-                <button id="addAnswer">Add answer</button>
+                <button id="addConfig">Add config</button>
+                <br /><br />
+                Available message IDs:<br />
+                <span id="allMessageIds">Please wait...</span>
             </div>
         </div>
 
         <div id="template">
             <div class="container" id="ContainerCID">
                 <div class="containerHead">
-                    <span class="containerTitle">Game:</span>
-                    <input type="text" id="GameCID" />
+                    <span class="containerTitle">Category:</span>
+                    <input type="text" id="CategoryCID" />
                     <input type="checkbox" id="ActiveCID" />
                 </div>
                 <div class="containerBody">
                     <table>
                         <tr>
-                            <td>Answer:</td>
-                            <td><textarea id="AnswerCID"></textarea></td>
+                            <td>Description:</td>
+                            <td><textarea id="DescriptionCID"></textarea></td>
                         </tr>
                         <tr>
-                            <td>Details:</td>
-                            <td><textarea id="DetailsCID"></textarea></td>
+                            <td>URL:</td>
+                            <td><input type="text" id="URLCID" /></td>
                         </tr>
                         <tr>
-                            <td>Link:</td>
-                            <td><input type="text" id="LinkCID" /></td>
+                            <td>Message IDs:</td>
+                            <td><textarea id="MessagesIdsCID"></textarea></td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <div class="tableBreak">Convention: Empty project == Gaming message</div>
+                                <div class="tableBreak">Message IDs are space-separated</div>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>Project:</td>
-                            <td><select id="ProjectCID"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Technology:</td>
-                            <td><select id="TechnologyCID"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Language:</td>
-                            <td><select id="LanguageCID"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Editor:</td>
-                            <td><select id="EditorCID"></select></td>
-                        </tr>
-                        <tr>
-                            <td>Theme:</td>
-                            <td><select id="ThemeCID"></select></td>
                         </tr>
                         <tr>
                             <td colspan="2">
                                 <div class="tableBreak">
-                                    <a href="#" id="RemoveCID" onclick="remove(CID);">Remove answer</a>
+                                    <a href="#" id="RemoveCID" onclick="removeContainer(CID);">Remove config</a>
                                 </div>
                             </td>
                         </tr>
@@ -76,9 +59,9 @@
             </div>
         </div>
 
-        <script src="was.js"></script>
+        <script src="stream-info-dashboard.js"></script>
         <script>
-            init();
+            initDashboard();
         </script>
     </body>
 </html>
