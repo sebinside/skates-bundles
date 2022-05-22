@@ -70,6 +70,10 @@
     transition: all 1s;
 }
 
+.contentText {
+    margin-left: 5px;
+}
+
 .active {
     opacity: 1;
 }
