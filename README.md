@@ -5,11 +5,11 @@ This includes live chat interacation and remote control capabilities, e.g., trig
 All bundles rely on the [nodecg-io](https://nodecg.io) project.
 
 
-## Bundle Overview
+## Bundle Overview  
 
 * [nanoleaf-events](/nanoleaf-events) triggers Nanoleaf Shapes based on live events like channel points, subs, and hype trains
 * [stream-bar](/stream-bar) shows stream meta information like current song playing and last sub in a bar visible in the stream
-* [was](/was) provides a chat bot and [website](https://was.skate702.de) communication, answering what the streamer currently does based on the stream info
+* [stream-info](/stream-info) provides a chat bot and a stream overlay, answering what the streamer currently does and commonly asked questions
 * [skates-utils](/skates-utils) provides common functionality used by the other bundles
 
 
