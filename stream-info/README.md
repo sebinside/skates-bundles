@@ -1,10 +1,14 @@
 # skate's Bundles: stream-info
 
-*Under development*
+This bundle provides a chat bot and a stream overlay answering commonly asked questions about what is currently developed (in German: "was"), current goals, projects, and the programming language.
 
 ## Features
 
-*Under development*
+* Commonly asked questions and answers can be provided as messages
+* Stream information for every twitch category and project can be set by the streamer using the NodeCG dashboard. This includes the description, a code url and a set of message ids for further commonly asked questions
+* The chat bot replies with stream information when asked `!was`
+* The chat bot offers several other commands including `!wer`, `!project`, `!editor`, ...
+* Most of the fields are optional, *stream-info* is totally viable to be used outside of coding streams, e.g., in gaming categories
 
 ## Service Dependencies
 

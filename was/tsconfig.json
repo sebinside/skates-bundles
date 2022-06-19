@@ -1,8 +1,0 @@
-{
-    "extends": "nodecg-io-tsconfig",
-    "compilerOptions": {
-        "lib": [
-            "dom"
-        ]
-    }
-}

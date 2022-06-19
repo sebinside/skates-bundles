@@ -53,7 +53,8 @@ export class StreamInfoChatBot {
             ["wie", "how"],
             ["projekt", "project"],
             ["editor", "editor"],
-            ["sprache", "language"]
+            ["sprache", "language"],
+            ["theme", "editor"]
         ]);
 
         for(const [command, category] of commandsAndCategories) {
