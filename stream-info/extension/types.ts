@@ -1,4 +1,4 @@
-export type MessageType = "what" | "where" | "who"
+export type MessageType = "what" | "where" | "who" | "misc" | "language" | "editor" | "theme" | "project" | "how"
 
 export type DisplayMessage = {
     type: MessageType

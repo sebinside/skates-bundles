@@ -24,7 +24,6 @@ function updateUI(): void {
     startAnimation();
 }
 
-
 const ANIMATION_INTERVAL_IN_MS = 10 * 1000;
 let timer: NodeJS.Timer;
 

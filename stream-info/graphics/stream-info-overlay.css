@@ -91,6 +91,30 @@ body {
     color: #0099ff;
 }
 
+.messageType-how {
+    color: #95ff00;
+}
+
 .messageType-who {
     color: #d0ff00;
+}
+
+.messageType-misc {
+    color: #ff00e6;
+}
+
+.messageType-language {
+    color: #fff700;
+}
+
+.messageType-editor {
+    color: #bf00ff;
+}
+
+.messageType-theme {
+    color: #00ff95;
+}
+
+.messageType-project {
+    color: #ff0000;
 }

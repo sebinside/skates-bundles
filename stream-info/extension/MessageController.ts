@@ -3,7 +3,7 @@ import { DefaultMessages } from "./DefaultMessages";
 import { DisplayMessage, StreamInfoConfig } from "./types";
 
 export class MessageController {
-        private static readonly REPLICANT_ID_CURRENT_CATEGORY: string = "streaminfo.currentcategory";
+    private static readonly REPLICANT_ID_CURRENT_CATEGORY: string = "streaminfo.currentcategory";
     private static readonly REPLICANT_ID_ALL_MESSAGES: string = "streaminfo.allmessages";
     private static readonly REPLICANT_ID_CURRENT_MESSAGES: string = "streaminfo.currentmessages";
     private static readonly REPLICANT_ID_CONFIGS: string = "streaminfo.config";
@@ -21,8 +21,12 @@ export class MessageController {
         this.currentMessagesReplicant = this.initReplicant(MessageController.REPLICANT_ID_CURRENT_MESSAGES, DefaultMessages.REPLICANT_DEFAULT_CURRENT_MESSAGES);
 
         this.allMessagesReplicant = this.initReplicant(MessageController.REPLICANT_ID_ALL_MESSAGES, DefaultMessages.REPLICANT_DEFAULT_ALL_MESSAGES);
+        this.allMessagesReplicant.value = DefaultMessages.REPLICANT_DEFAULT_ALL_MESSAGES;
 
         this.configsReplicant = this.initReplicant(MessageController.REPLICANT_ID_CONFIGS, DefaultMessages.REPLICANT_DEFAULT_CONFIGS);
+
+        this.currentCategoryReplicant.on("change", () => this.updateCurrentMessages());
+        this.configsReplicant.on("change", () => this.updateCurrentMessages());
     }
 
     private initReplicant<T>(id: string, defaultValue: T) {
@@ -39,7 +43,7 @@ export class MessageController {
             message = config.url ? `${message} | Mehr Infos: ${config.url}` : message;
         }
 
-        return message.replaceAll("{", "").replaceAll("}", "");
+        return MessageController.removeBrackets(message);
     }
 
     public getCurrentInfoMessage(): string {
@@ -51,7 +55,7 @@ export class MessageController {
     }
 
     public setCurrentCategory(category: string): void {
-        if(this.currentCategoryReplicant.value !== category) {
+        if (this.currentCategoryReplicant.value !== category) {
             this.currentCategoryReplicant.value = category;
             this.nodecg.log.info(`Updated category to ${category}.`)
         }
@@ -66,28 +70,44 @@ export class MessageController {
         return this.getActiveConfigForCategory(category)?.url;
     }
 
-    public updateCurrentMessages() {
+    private updateCurrentMessages() {
         const category = this.currentCategoryReplicant.value;
         const config = this.getActiveConfigForCategory(category);
-        
-        const whatMessage : DisplayMessage = {
+
+        const whatMessage: DisplayMessage = {
             title: "{!was} mache ich gerade?",
             content: config?.description || "",
             type: "what"
         }
 
-        const allMessages: Record<string, DisplayMessage> = {};
+        const currentMessages: Record<string, DisplayMessage> = {};
         config?.messageIds.forEach(id => {
             const message = this.allMessagesReplicant.value[id];
 
-            if(message) {
-                allMessages[id] = message;
+            if (message) {
+                currentMessages[id] = { ...message };
             } else {
                 this.nodecg.log.warn(`Unable to find message with ID ${id}.`);
             }
         });
 
-        allMessages["what"] = whatMessage;
-        this.currentMessagesReplicant.value = allMessages;
+        currentMessages["what"] = whatMessage;
+        this.currentMessagesReplicant.value = currentMessages;
+    }
+
+    public getFirstCurrentMessageForCategory(category: string) {
+        const currentMessages = this.currentMessagesReplicant.value;
+
+        for (const entry of Object.values(currentMessages)) {
+            if (entry.type === category) {
+                return MessageController.removeBrackets(entry.content);
+            }
+        }
+
+        return undefined;
+    }
+
+    private static removeBrackets(message: string) {
+        return message.replaceAll("{", "").replaceAll("}", "");
     }
 }
