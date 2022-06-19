@@ -17,4 +17,6 @@ This bundle provides a chat bot and a stream overlay answering commonly asked qu
 
 ## Custom Installation
 
-font awesome required
+This bundles provides NodeCG graphics that can be queried by using the `Graphics` tab of NodeCG.
+
+**Font Awesome (Pro) required**: This bundle requires [Font Awesome](https://fontawesome.com/) for its NodeCG graphics. Add the Font Awesome's `css` and `webfonts` folders into the `graphics` folder of this bundle.

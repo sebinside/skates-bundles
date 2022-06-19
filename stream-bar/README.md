@@ -18,3 +18,5 @@ This bundles shows stream meta information like current song playing and last su
 ## Custom Installation
 
 This bundles provides NodeCG graphics that can be queried by using the `Graphics` tab of NodeCG.
+
+**Font Awesome (Pro) required**: This bundle requires [Font Awesome](https://fontawesome.com/) for its NodeCG graphics. Add the Font Awesome's `css` and `webfonts` folders into the `graphics` folder of this bundle.
