@@ -1,0 +1,9 @@
+{
+    "extends": "nodecg-io-tsconfig",
+    "compilerOptions": {
+        "lib": [
+            "dom",
+            "ES2021"
+        ]
+    }
+}

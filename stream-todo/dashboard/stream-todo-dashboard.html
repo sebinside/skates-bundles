@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="stream-info-dashboard.css" />
+    </head>
+
+    <body>
+        <div class="container" id="config">
+            <div class="containerHead">
+                <span class="containerTitle">stream-info config</span>
+            </div>
+            <div class="containerBody">
+                <button id="retrieveCurrentCategory">Retrieve current category</button>
+                <br /><br />
+                <button id="saveConfig">Save all configs</button>
+                <br /><br />
+                <button id="addConfig">Add config</button>
+                <br /><br />
+                Available message IDs:<br />
+                <div id="allMessageIds">Please wait...</div>
+            </div>
+        </div>
+
+        <div id="template">
+            <div class="container" id="ContainerCID">
+                <div class="containerHead">
+                    <span class="containerTitle">Category:</span>
+                    <input type="text" id="CategoryCID" />
+                    <input type="checkbox" id="ActiveCID" />
+                </div>
+                <div class="containerBody">
+                    <table>
+                        <tr>
+                            <td>Description:</td>
+                            <td><textarea id="DescriptionCID"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>URL:</td>
+                            <td><input type="text" id="URLCID" /></td>
+                        </tr>
+                        <tr>
+                            <td>Message IDs:</td>
+                            <td><textarea id="MessagesIdsCID"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="tableBreak">Message IDs are space-separated</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="tableBreak">
+                                    <a href="#" id="RemoveCID" onclick="removeContainer(CID);">Remove config</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script src="stream-info-dashboard.js"></script>
+        <script>
+            //initDashboard();
+        </script>
+    </body>
+</html>
