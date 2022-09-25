@@ -12,31 +12,31 @@
 </head>
 
 <body>
-    
-    <form action="">
-        <label class="form-control">
-          <input type="checkbox" name="checkbox" checked id="task1" />
-          Neues Bundle anlegen
+
+    <form action="" id="mainForm">
+        <label class="form-control hiddenEntry" id="label0">
+            <input type="checkbox" name="checkbox" id="task0" onclick="check(0)" />
+            <span id="description0"></span>
         </label>
-    
-        <label class="form-control">
-          <input type="checkbox" name="checkbox" id="task2" />
-          Frontend schreiben
+
+        <label class="form-control hiddenEntry" id="label1">
+            <input type="checkbox" name="checkbox" id="task1" onclick="check(1)" />
+            <span id="description1"></span>
         </label>
-    
-        <label class="form-control">
-          <input type="checkbox" name="checkbox" id="task3" />
-          Backend schreiben
+
+        <label class="form-control hiddenEntry" id="label2">
+            <input type="checkbox" name="checkbox" id="task2" onclick="check(2)" />
+            <span id="description2"></span>
         </label>
-    
-        <label class="form-control">
-          <input type="checkbox" name="checkbox" id="task4" />
-          Kanalpunkte Integration
+
+        <label class="form-control hiddenEntry" id="label3">
+            <input type="checkbox" name="checkbox" id="task3" onclick="check(3)" />
+            <span id="description3"></span>
         </label>
-      </form>
+    </form>
 
     <script>
-        //initOverlay();
+        initOverlay();
     </script>
 </body>
 

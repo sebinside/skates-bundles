@@ -1,5 +1,7 @@
 /// <reference types="nodecg-types/types/browser" />
 
+export {}
+
 type Task = {
     done: boolean
     description: string

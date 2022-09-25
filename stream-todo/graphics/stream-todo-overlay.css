@@ -59,3 +59,7 @@ input[type="checkbox"]::before {
 input[type="checkbox"]:checked::before {
     transform: scale(2.5);
 }
+
+.hiddenEntry {
+    display: none;
+}
