@@ -1,67 +1,45 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="stream-info-dashboard.css" />
+        <link rel="stylesheet" href="stream-todo-dashboard.css" />
     </head>
 
     <body>
         <div class="container" id="config">
             <div class="containerHead">
-                <span class="containerTitle">stream-info config</span>
+                <span class="containerTitle">stream-todo config</span>
             </div>
             <div class="containerBody">
-                <button id="retrieveCurrentCategory">Retrieve current category</button>
-                <br /><br />
-                <button id="saveConfig">Save all configs</button>
-                <br /><br />
-                <button id="addConfig">Add config</button>
-                <br /><br />
-                Available message IDs:<br />
-                <div id="allMessageIds">Please wait...</div>
+                <table>
+                    <tr>
+                        <td><input type="checkbox" id="done0"></td>
+                        <td><input type="text" id="task0"></input></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="done1"></td>
+                        <td><input type="text" id="task1"></input></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="done2"></td>
+                        <td><input type="text" id="task2"></input></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="done3"></td>
+                        <td><input type="text" id="task3"></input></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <br>
+                            <button id="saveConfig" onclick="saveTasks()">Save all tasks</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
-        <div id="template">
-            <div class="container" id="ContainerCID">
-                <div class="containerHead">
-                    <span class="containerTitle">Category:</span>
-                    <input type="text" id="CategoryCID" />
-                    <input type="checkbox" id="ActiveCID" />
-                </div>
-                <div class="containerBody">
-                    <table>
-                        <tr>
-                            <td>Description:</td>
-                            <td><textarea id="DescriptionCID"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>URL:</td>
-                            <td><input type="text" id="URLCID" /></td>
-                        </tr>
-                        <tr>
-                            <td>Message IDs:</td>
-                            <td><textarea id="MessagesIdsCID"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <div class="tableBreak">Message IDs are space-separated</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <div class="tableBreak">
-                                    <a href="#" id="RemoveCID" onclick="removeContainer(CID);">Remove config</a>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <script src="stream-info-dashboard.js"></script>
+        <script src="stream-todo-dashboard.js"></script>
         <script>
-            //initDashboard();
+            initDashboard();
         </script>
     </body>
 </html>

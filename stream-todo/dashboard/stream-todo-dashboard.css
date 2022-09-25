@@ -9,16 +9,6 @@
     box-shadow: 6px 5px 15px 3px rgba(0, 0, 0, 0.52);
 }
 
-.tableBreak {
-    border-top: 1px dashed rgb(64, 64, 64);
-    margin-top: 10px;
-    font-size: smaller;
-    padding-top: 10px;
-    margin-bottom: 5px;
-    color: gray;
-    font-style: italic;
-}
-
 .containerHead {
     display: block;
     color: #6194cf;
@@ -56,6 +46,7 @@ button {
     color: white;
     background-color: rgb(70, 70, 70);
     font-size: large;
+    float:right;
 }
 
 button:active {
@@ -70,42 +61,4 @@ textarea {
     background-color: rgb(70, 70, 70);
     border: 1px solid rgb(20, 20, 20);
     width: 250px;
-}
-
-.containerHead > input[type="text"] {
-    margin-left: 33px;
-}
-
-textarea {
-    height: 120px;
-}
-
-#template {
-    display: none;
-}
-
-a,
-a:hover,
-a:visited {
-    color: gray;
-}
-
-.containerDeactivated {
-    pointer-events: none;
-    opacity: 0.5;
-}
-
-#allMessageIds {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 210px;
-}
-
-.messageId {
-    background-color: #6194cf;
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 5px;
-    margin-right: 5px;
-    margin-top: 10px;
 }
