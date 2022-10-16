@@ -1,27 +1,25 @@
 /// <reference types="nodecg-types/types/browser" />
 
-export {}
-
-type Task = {
+type UITask = {
     done: boolean
     description: string
 }
 
-const tasksReplicant = nodecg.Replicant<Array<Task>>('streamTODOs.tasks');
+const uiTasksReplicant = nodecg.Replicant<Array<UITask>>('streamTODOs.tasks');
 const MAX_NUMBER_OF_TASKS = 4;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function initDashboard() {
-    NodeCG.waitForReplicants(tasksReplicant).then(() => {
+    NodeCG.waitForReplicants(uiTasksReplicant).then(() => {
 
-        tasksReplicant.on('change', (newValue) => {
-            newValue.forEach((task, index) => updateUI(index, task));
+        uiTasksReplicant.on('change', (newValue) => {
+            newValue.forEach((task, index) => updateDashboardUI(index, task));
             nodecg.log.info(`Retrieved ${newValue.length} tasks.`);
         });
     });
 }
 
-function updateUI(index: number, task: Task) {
+function updateDashboardUI(index: number, task: UITask) {
     const checkbox = document.querySelector<HTMLInputElement>(`#done${index}`);
     const textfield = document.querySelector<HTMLInputElement>(`#task${index}`);
 
@@ -33,7 +31,7 @@ function updateUI(index: number, task: Task) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function saveTasks() {
-    const tasks: Task[] = [];
+    const tasks: UITask[] = [];
 
     for (let i = 0; i < MAX_NUMBER_OF_TASKS; i++) {
         const checkbox = document.querySelector<HTMLInputElement>(`#done${i}`);
@@ -46,6 +44,6 @@ function saveTasks() {
         }
     }
 
-    tasksReplicant.value = tasks;
+    uiTasksReplicant.value = tasks;
     nodecg.log.info("Saved tasks.");
 }

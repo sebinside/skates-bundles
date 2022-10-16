@@ -1,3 +1,7 @@
+:root {
+    --checkbox-color: hsl(78, 68%, 52%);
+}
+
 *,
 *:before,
 *:after {
@@ -53,7 +57,7 @@ input[type="checkbox"]::before {
     transform: scale(0);
     transform-origin: 7px 11px;
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em #a6d832;
+    box-shadow: inset 1em 1em var(--checkbox-color);
 }
 
 input[type="checkbox"]:checked::before {

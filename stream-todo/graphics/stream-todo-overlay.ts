@@ -6,16 +6,21 @@ type Task = {
 }
 
 const tasksReplicant = nodecg.Replicant<Array<Task>>('streamTODOs.tasks');
+const colorReplicant = nodecg.Replicant<number>('streamTODOs.color');
 const hiddenEntryClass = "hiddenEntry";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function initOverlay() {
-    NodeCG.waitForReplicants(tasksReplicant).then(() => {
+    NodeCG.waitForReplicants(tasksReplicant, colorReplicant).then(() => {
 
         tasksReplicant.on('change', (newValue) => {
             hideAllLabels();
             newValue.forEach((task, index) => updateUI(index, task));
         });
+
+        colorReplicant.on('change', (newColor) => {
+            updateCheckboxColor(newColor);
+        })
     });
 }
 
@@ -45,4 +50,9 @@ function check(index: number) {
     if(checkbox && task) {
         task.done = checkbox?.checked
     }
+}
+
+function updateCheckboxColor(newColor: number) {
+    nodecg.log.info(`Received new coloring number: ${newColor}`);
+    document.documentElement.style.setProperty('--checkbox-color', `hsl(${newColor}, 68%, 52%)`);
 }
